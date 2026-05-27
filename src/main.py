@@ -74,7 +74,7 @@ class Engine:
 
         #update screen(display)
         self._display.fill(self.bg)
-        self._display.blit(self.screen, (0, 0))
+        self._display.blit(pygame.transform.scale(self.screen, self.screen_dim), (0, 0))
         pygame.display.flip()
 
     def exit(self):

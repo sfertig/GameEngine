@@ -8,7 +8,11 @@ cam = Camera()
 rect = Rect(0, 0, 100, 65, "red")
 speed = 100
 
-c = Circle(0, 0, 50, "blue", layer=7)
+#load assets
+Assets.new_image("tests/assets/test.png", "test")
+
+Image(Assets.get_image("test"), layer=1)
+
 
 while True:
     game.Tick()

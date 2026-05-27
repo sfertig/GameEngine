@@ -1,6 +1,8 @@
 import pygame
 from .._net import Global
 
+from ..utils import change_layer
+
 class _Shape:
     def __init__(self, x, y, vx, vy, show):
         self.x = x
@@ -26,8 +28,7 @@ class Rect(_Shape):
         print(Global.objects)
 
     def change_layer(self, new_layer):
-        Global.remove_object(self.layer, self)
-        Global.add_object(new_layer, self)
+        change_layer(self, new_layer, self.layer)
         self.layer = new_layer
 
     def rect(self):
@@ -50,8 +51,7 @@ class Circle(_Shape):
         Global.add_object(layer, self)
 
     def change_layer(self, new_layer):
-        Global.remove_object(self.layer, self)
-        Global.add_object(new_layer, self)
+        change_layer(self, new_layer, self.layer)
         self.layer = new_layer
 
     def render(self):
