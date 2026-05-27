@@ -8,11 +8,13 @@ class CollisionRect:
         self.x, self.y, self.width, self.height = x, y, width, height
         self.layers = layers
         Global.collisions.append(self)
+        self.active = True
 
     def rect(self):
         return pygame.Rect(self.x, self.y, self.width, self.height)
     
     def isColliding(self):
+        if not self.active: return False
         for obj in Global.collisions:
             if obj == self: continue
             for layer in self.layers:

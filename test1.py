@@ -5,26 +5,22 @@ from src import *
 pygame.init()
 
 game = Engine(bg="green", RESIZABLE=True)
+game.create_aroundScreen_bounds()
 cam = Camera()
-rect = Rect(0, 0, 100, 65, "red", enableCollision=True)
-rect.collision.layers = [1]
 
-speed = 100
-
-#load assets
 Assets.new_image("tests/assets/test.png", "test")
 
-i = Image(Assets.get_image("test"), layer=1, enableCollision=True)
-i.collision.layers = [1]
+rect = DynamicBody(0, 0, Assets.get_image("test").get_width(), Assets.get_image("test").get_height())
+rect.shape = Rect(0, 0, rect.width, rect.height, "red")
 
 
 while True:
     game.Tick()
 
-    if i.collision.isColliding(): print("colliding")
-
     rect.vx=0.0
     rect.vy=0.0
+    speed=100
+    if Keys.is_held(Keys.shift): speed=200
     if Keys.is_held(Keys.w): rect.vy=-speed
     if Keys.is_held(Keys.s): rect.vy=speed
     if Keys.is_held(Keys.a): rect.vx=-speed

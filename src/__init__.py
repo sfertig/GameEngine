@@ -13,6 +13,7 @@ from .basics.input import Keys
 from .basics.shapes import Rect, Circle
 from .assets.cache import Assets
 from .assets.images import Image
+from .physics.dynamicBody import DynamicBody
 
 __all__ = [
     "Engine",
@@ -22,4 +23,5 @@ __all__ = [
     "Circle",
     "Assets",
     "Image",
+    "DynamicBody",
     ]

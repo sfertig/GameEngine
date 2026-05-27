@@ -59,6 +59,8 @@ class _keys:
         self.left = pygame.K_LEFT
         self.right = pygame.K_RIGHT
 
+        self.shift = pygame.K_LSHIFT
+
         #mouse
         self.mouse_x, self.mouse_y = 0, 0
 
