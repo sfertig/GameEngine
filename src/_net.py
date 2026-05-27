@@ -21,6 +21,9 @@ class _global_:
         #objects
         self.objects = {}
 
+        #collisions
+        self.collisions = []
+
     def add_object(self, layer: str, obj):
         if layer not in self.objects:
             self.objects[layer] = []

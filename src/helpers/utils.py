@@ -1,5 +1,5 @@
 import pygame
-from ._net import Global
+from .._net import Global
 
 def change_layer(self, new_layer, layer):
         Global.remove_object(layer, self)
