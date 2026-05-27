@@ -40,3 +40,21 @@ class Rect(_Shape):
             rect.y = self.y-Global.cam.y
             pygame.draw.rect(Global.screen, self.color, rect, self._width)
 
+class Circle(_Shape):
+    def __init__(self, x, y, radius, color, _width=0, vx=0.0, vy=0.0, show=True, layer=3):
+        super().__init__(x, y, vx, vy, show)
+        self.layer = layer
+        self.r = radius
+        self.color = color
+        self._width=_width
+        Global.add_object(layer, self)
+
+    def change_layer(self, new_layer):
+        Global.remove_object(self.layer, self)
+        Global.add_object(new_layer, self)
+        self.layer = new_layer
+
+    def render(self):
+        if self.show:
+            pygame.draw.circle(Global.screen, self.color, (self.x-Global.cam.x, self.y-Global.cam.y), self.r, self._width)
+
