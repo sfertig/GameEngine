@@ -35,5 +35,8 @@ class Rect(_Shape):
 
     def render(self):
         if self.show:
-            pygame.draw.rect(Global.screen, self.color, self.rect(), self._width)
+            rect = self.rect()
+            rect.x = self.x-Global.cam.x
+            rect.y = self.y-Global.cam.y
+            pygame.draw.rect(Global.screen, self.color, rect, self._width)
 

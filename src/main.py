@@ -42,6 +42,10 @@ class Engine:
             if event.type == pygame.VIDEORESIZE and self.RESIZABLE:
                 self._auto_resize(event)
         #updates
+
+        #cam
+        Global.cam.update()
+        #objects
         layer=MIN_LAYER
         while layer<=MAX_LAYER:
             if layer in Global.objects:
