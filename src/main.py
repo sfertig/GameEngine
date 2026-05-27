@@ -1,6 +1,7 @@
 import pygame
 import sys
 from ._net import Global
+from .basics.input import Keys
 
 MIN_LAYER = -5
 MAX_LAYER = 10
@@ -42,6 +43,9 @@ class Engine:
             if event.type == pygame.VIDEORESIZE and self.RESIZABLE:
                 self._auto_resize(event)
         #updates
+
+        #keys
+        Keys.update()
 
         #cam
         Global.cam.update()
