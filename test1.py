@@ -1,9 +1,11 @@
 import pygame
-from src import Engine
+from src import *
 
 pygame.init()
 
-game = Engine(RESIZABLE=True)
+game = Engine(bg="green", RESIZABLE=True)
+
+rect = Rect(0, 0, 100, 65, "red")
 
 while True:
     game.Tick()

@@ -12,6 +12,7 @@ class _global_:
         self.FH = 0.0
 
         #basics
+        self.cam = None
         self.clock: pygame.time.Clock = None
         self.bg: str = "black"
         self.dt: float = 0.0

@@ -2,6 +2,9 @@ import pygame
 import sys
 from ._net import Global
 
+MIN_LAYER = -5
+MAX_LAYER = 10
+
 class Engine:
     def __init__(self, bg="black", title="Pygame Win", width=800, height=600, RESIZABLE=False, TARGET_FPS=60):
         if RESIZABLE: self._display = pygame.display.set_mode((width, height), flags=pygame.RESIZABLE)
@@ -39,10 +42,27 @@ class Engine:
             if event.type == pygame.VIDEORESIZE and self.RESIZABLE:
                 self._auto_resize(event)
         #updates
+        layer=MIN_LAYER
+        while layer<=MAX_LAYER:
+            if layer in Global.objects:
+                i = Global.objects[layer]
+                for obj in i:
+                    if hasattr(obj, "update"): obj.update()
+            layer+=1
+        
 
     def render(self):
         self.screen.fill(self.bg)
         #render to screen
+        layer=MIN_LAYER
+        while layer<=MAX_LAYER:
+            if layer in Global.objects:
+                i = Global.objects[layer]
+                for obj in i:
+                    if hasattr(obj, "render"): 
+                        obj.render()
+            layer+=1
+        
 
         #update screen(display)
         self._display.fill(self.bg)
