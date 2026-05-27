@@ -8,13 +8,26 @@ class _global_:
         self.ScreenDim: tuple = (800, 600)
         self.title: str = "Pygame Window"
 
-        self.FW = 0.0
+        self.FW = 0.0 #diference used for resizing
         self.FH = 0.0
 
         #basics
         self.clock: pygame.time.Clock = None
         self.bg: str = "black"
         self.dt: float = 0.0
+        self.events: list[pygame.event.Event] = []
+
+        #objects
+        self.objects = {}
+
+    def add_object(self, layer: str, obj):
+        if layer not in self.objects:
+            self.objects[layer] = []
+        self.objects[layer].append(obj)
+
+    def remove_object(self, layer: str, obj):
+        if layer in self.objects:
+            self.objects[layer].remove(obj)
 
 Global = _global_()
 

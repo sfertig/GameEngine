@@ -1,16 +1,16 @@
 import pygame
 import sys
-from _net import Global
+from ._net import Global
 
 class Engine:
     def __init__(self, bg="black", title="Pygame Win", width=800, height=600, RESIZABLE=False, TARGET_FPS=60):
-        if RESIZABLE: self._display = pygame.display.set_mode(width, height, flags=pygame.RESIZABLE)
-        else: self._display = pygame.display.set_mode(width, height)
+        if RESIZABLE: self._display = pygame.display.set_mode((width, height), flags=pygame.RESIZABLE)
+        else: self._display = pygame.display.set_mode((width, height))
 
         self.screen_dim = (width, height)
         self.RESIZABLE = RESIZABLE
 
-        self.screen = pygame.Surface(width, height)
+        self.screen = pygame.surface.Surface((width, height))
         self.bg = bg
         self.title = title
 
