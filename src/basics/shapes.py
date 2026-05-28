@@ -32,8 +32,6 @@ class Rect(_Shape):
         if enableCollision:
             self.collision: CollisionRect = CollisionRect(x, y, width, height)
 
-        print(Global.objects)
-
     def change_layer(self, new_layer):
         change_layer(self, new_layer, self.layer)
         self.layer = new_layer

@@ -6,6 +6,7 @@ pygame.init()
 
 game = Engine(bg="green", RESIZABLE=True)
 game.create_aroundScreen_bounds()
+G = game._func_get_global_()
 cam = Camera()
 
 Assets.new_image("tests/assets/test.png", "test")
@@ -21,6 +22,8 @@ while True:
     rect.vy=0.0
     speed=100
     if Keys.is_held(Keys.shift): speed=200
+    if Keys.is_pressed(Keys.space): rect.shape.show = not rect.shape.show
+
     if Keys.is_held(Keys.w): rect.vy=-speed
     if Keys.is_held(Keys.s): rect.vy=speed
     if Keys.is_held(Keys.a): rect.vx=-speed
