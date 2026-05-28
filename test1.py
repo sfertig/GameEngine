@@ -35,3 +35,5 @@ while True:
     if Keys.is_held(Keys.a): rect.vx=-speed
     if Keys.is_held(Keys.d): rect.vx=speed
 
+    if Keys.is_pressed(Keys.escape): map.activateEditor()
+
