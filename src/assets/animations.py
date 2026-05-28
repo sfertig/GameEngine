@@ -3,6 +3,7 @@ from .._net import Global
 from .images import Image
 #from .cache import Assets
 from ..helpers.utils import change_layer
+from ..physics.collisions import CollisionRect
 
 def splitImage(image, width, height, frames):
     images = []
@@ -17,7 +18,7 @@ def splitImage(image, width, height, frames):
     return new_images
 
 class Animation:
-    def __init__(self, name, image, frames, width=16, height=16, x=0, y=0, loop=True, speed=0.3, layer=3, show=True):
+    def __init__(self, name, image, frames, width=16, height=16, x=0, y=0, loop=True, speed=0.3, layer=3, show=True, enableCollision=False):
         self.name = name
         self.frames = splitImage(image, width, height, frames)
         self.frame = 0
@@ -31,13 +32,19 @@ class Animation:
 
         Global.add_object(layer, self)
 
-        print(self.frames)
+        self.collision = None
+        if enableCollision:
+            self.collision = CollisionRect(x, y, width, height)
+            self.collision.layers = [layer]
 
     def change_layer(self, new_layer):
         change_layer(self, new_layer, self.layer)
         self.layer = new_layer
 
     def update(self):
+        if self.collision is not None:
+            self.collision.x = self.x
+            self.collision.y = self.y
         #update using Global.dt
         self.time+=Global.dt
         if self.time >= self.speed:
@@ -46,6 +53,9 @@ class Animation:
             if self.frame > len(self.frames)-1:
                 if self.loop:
                     self.frame = 0
+
+    def enableCollision(self):
+        self.collision = CollisionRect(self.x, self.y, self.image.get_width(), self.image.get_height())
 
     def get_frame(self):
         return self.frames[self.frame]

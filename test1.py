@@ -9,7 +9,7 @@ game.create_aroundScreen_bounds()
 G = game._func_get_global_()
 cam = Camera()
 
-Assets.new_image("tests/assets/test.png", "test")
+Assets.new_image("tests/assets/test.png", "test", scale=3.0)
 Assets.new_animation(Assets.get_image("test"), "test", [0, 2], 16, 16, loop=True, show=True, speed=0.4)
 
 rect = DynamicBody(0, 0, Assets.get_image("test").get_width(), Assets.get_image("test").get_height())
