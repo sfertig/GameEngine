@@ -14,6 +14,7 @@ from .basics.shapes import Rect, Circle
 from .assets.cache import Assets
 from .assets.images import Image
 from .physics.dynamicBody import DynamicBody
+from .assets.tilemap import Tilemap
 
 __all__ = [
     "Engine",
@@ -24,4 +25,5 @@ __all__ = [
     "Assets",
     "Image",
     "DynamicBody",
+    "Tilemap",
     ]

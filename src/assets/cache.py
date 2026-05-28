@@ -8,7 +8,8 @@ class _Cache:
         self.tilesets: dict[str, dict[tuple[int, int], pygame.surface.Surface]] = {}
         self.fonts: dict[str, pygame.font.Font] = {}
 
-    def clear(self):
+    def clear_all(self, _confirm=False):
+        if not _confirm: return
         self.images.clear()
         self.animations.clear()
         self.tilesets.clear()
