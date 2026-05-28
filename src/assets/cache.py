@@ -5,11 +5,13 @@ class _Cache:
     def __init__(self):
         self.images: dict[str, pygame.surface.Surface] = {}
         self.animations: dict[str, Animation] = {}
+        self.tilesets: dict[str, dict[tuple[int, int], pygame.surface.Surface]] = {}
         self.fonts: dict[str, pygame.font.Font] = {}
 
     def clear(self):
         self.images.clear()
         self.animations.clear()
+        self.tilesets.clear()
         self.fonts.clear()
 
     #########################
@@ -32,6 +34,14 @@ class _Cache:
         self.animations[name] = Animation(name, image, frames, width, height, loop, speed, layer, show)
         return True
     
+    def new_tileset(self, path, name, width=16, height=16, scale=1.0, colorkey=None) -> bool:
+        image = pygame.image.load(path).convert_alpha()
+        if colorkey is not None:
+            image.set_colorkey(colorkey)
+        if scale != 1.0:
+            image = pygame.transform.scale(image, (int(image.get_width()*scale), int(image.get_height()*scale)))
+        self.tilesets[name] = load_tileset(image, width*scale, height*scale)
+    
     ########################
     #REMOVING
     ########################
@@ -44,6 +54,10 @@ class _Cache:
         if name in self.animations:
             del self.animations[name]
 
+    def remove_tileset(self, name):
+        if name in self.tilesets:
+            del self.tilesets[name]
+
     ########################
     #GETTERS
     ########################
@@ -54,6 +68,16 @@ class _Cache:
 
     def get_animation(self, name) -> Animation:
         return self.animations[name]
+    
+    def get_tileset(self, name) -> pygame.surface.Surface:
+        return self.tilesets[name]
 
 Assets = _Cache()
+
+def load_tileset(image, width, height):
+    tileset = {}
+    for y in range(int(image.get_height()//height)):
+        for x in range(int(image.get_width()//width)):
+            tileset[(x, y)] = image.subsurface(pygame.Rect(x*width, y*height, width, height))
+    return tileset
 

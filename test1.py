@@ -9,8 +9,12 @@ game.create_aroundScreen_bounds()
 G = game._func_get_global_()
 cam = Camera()
 
-Assets.new_image("tests/assets/test.png", "test", scale=3.0)
-Assets.new_animation(Assets.get_image("test"), "test", [0, 2], 16, 16, loop=True, show=True, speed=0.4)
+Assets.new_image("tests/assets/test.png", "test", scale=2.0)
+Assets.new_animation(Assets.get_image("test"), "test", [0, 2], 32, 32, loop=True, show=True, speed=0.4)
+
+#load tileset into assets
+Assets.new_tileset("tests/assets/levelTiles.png", "map1", scale=2.0)
+print(Assets.tilesets)
 
 rect = DynamicBody(0, 0, Assets.get_image("test").get_width(), Assets.get_image("test").get_height())
 rect.animation = Assets.get_animation("test")

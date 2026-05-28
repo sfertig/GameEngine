@@ -13,7 +13,11 @@ def splitImage(image, width, height, frames):
             images.append(image.subsurface(pygame.Rect(x*width, y*height, width, height)))
     new_images = []
     #extract each frame
-    for i in range(frames[0], frames[1]):
+
+    #if all
+    if frames == "_ALL": return images
+    #else return range
+    for i in range(frames[0], frames[1]+1):
         new_images.append(images[i])
     return new_images
 
