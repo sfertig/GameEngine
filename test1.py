@@ -18,7 +18,7 @@ Assets.new_tileset("tests/assets/levelTiles.png", "map1", scale=2.0)
 rect = DynamicBody(0, 0, Assets.get_image("test").get_width(), Assets.get_image("test").get_height())
 rect.animation = Assets.get_animation("test")
 
-map = Tilemap(Assets.tilesets["map1"], layer=1)
+map = Tilemap("map1", Assets.tilesets["map1"], layer=1)
 map.tiles[(1, 1)] = (0, 0)
 print(map.tiles)
 

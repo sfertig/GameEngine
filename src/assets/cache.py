@@ -1,11 +1,12 @@
 import pygame
-from .._net import Global
+#from .._net import Global
 from .animations import Animation
 class _Cache:
     def __init__(self):
         self.images: dict[str, pygame.surface.Surface] = {}
         self.animations: dict[str, Animation] = {}
         self.tilesets: dict[str, dict[tuple[int, int], pygame.surface.Surface]] = {}
+        self._tileset_cache_data: dict[str, tuple[int, int]] = {}
         self.fonts: dict[str, pygame.font.Font] = {}
 
     def clear_all(self, _confirm=False):
@@ -13,6 +14,7 @@ class _Cache:
         self.images.clear()
         self.animations.clear()
         self.tilesets.clear()
+        self._tileset_cache_data.clear()
         self.fonts.clear()
 
     #########################
@@ -41,7 +43,9 @@ class _Cache:
             image.set_colorkey(colorkey)
         if scale != 1.0:
             image = pygame.transform.scale(image, (int(image.get_width()*scale), int(image.get_height()*scale)))
-        self.tilesets[name] = load_tileset(image, width*scale, height*scale)
+        data, cache = load_tileset(image, width*scale, height*scale)
+        self.tilesets[name] = data
+        self._tileset_cache_data[name] = cache
     
     ########################
     #REMOVING
@@ -77,8 +81,11 @@ Assets = _Cache()
 
 def load_tileset(image, width, height):
     tileset = {}
+    w, h = image.get_size()
+    w = int(w/width)
+    h = int(h/height)
     for y in range(int(image.get_height()//height)):
         for x in range(int(image.get_width()//width)):
             tileset[(x, y)] = image.subsurface(pygame.Rect(x*width, y*height, width, height))
-    return tileset
+    return tileset, (w, h)
 

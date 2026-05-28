@@ -18,6 +18,9 @@ class _global_:
         self.dt: float = 0.0
         self.events: list[pygame.event.Event] = []
 
+        #assets
+        self.assets = None
+
         #objects
         self.objects = {}
 

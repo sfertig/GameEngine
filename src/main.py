@@ -4,6 +4,7 @@ import os
 from ._net import Global, _global_
 from .basics.input import Keys
 from .physics.collisions import CollisionRect
+from .assets.cache import Assets
 
 MIN_LAYER = -5
 MAX_LAYER = 10
@@ -30,6 +31,7 @@ class Engine:
         Global.bg = self.bg
         Global.title = self.title
         Global.clock = self.clock
+        Global.assets = Assets
 
     def Tick(self):
         self.update()
