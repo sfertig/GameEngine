@@ -1,6 +1,8 @@
 import pygame
 from .._net import Global
 from ..helpers.utils import change_layer
+from ..basics.camera import Camera
+from ..basics.input import Keys
 
 class Tilemap:
     def __init__(self, tileset, show=True, layer=3):
@@ -36,8 +38,15 @@ class _TileMapEditor:
         self.map = map
         self.running = True
 
+        self.cam = Camera(-width/2, -height/2)
+        self.cam_speed = 50
+
         self.win = pygame.Window("Tilemap Editor", (width, height))
         self.screen = self.win.get_surface()
+
+        self.clock = pygame.time.Clock()
+        self.FPS = 60
+        self.dt = 0.0
 
     def run(self):
         while self.running:
@@ -46,17 +55,31 @@ class _TileMapEditor:
             self.render()
 
     def update(self):
+        self.dt = self.clock.tick(self.FPS) / 1000
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.win.close()
                 self.running = False
             if event.type == pygame.WINDOWCLOSE:
-                event.window.destroy()
-                self.running = False
+                try:
+                    event.window.destroy()
+                    self.running = False
+                except:
+                    pass
+
+        #cam movement
+        if Keys.is_held(Keys.a): self.cam.x -= self.cam_speed*self.dt
+        if Keys.is_held(Keys.d): self.cam.x += self.cam_speed*self.dt
+        if Keys.is_held(Keys.w): self.cam.y -= self.cam_speed*self.dt
+        if Keys.is_held(Keys.s): self.cam.y += self.cam_speed*self.dt
+        self.cam.update()
 
     def render(self):
         self.screen.fill("black")
         #render
+
+        #draw orgin
+        pygame.draw.circle(self.screen, "white", (0-self.cam.x, 0-self.cam.y), 5)
 
         #update
         self.win.flip()

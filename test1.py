@@ -7,7 +7,7 @@ pygame.init()
 game = Engine(bg="green", RESIZABLE=True)
 game.create_aroundScreen_bounds()
 G = game._func_get_global_()
-cam = Camera()
+cam = Camera(_main_cam_set_=True)
 
 Assets.new_image("tests/assets/test.png", "test", scale=2.0)
 Assets.new_animation(Assets.get_image("test"), "test", [0, 2], 32, 32, loop=True, show=True, speed=0.4)
