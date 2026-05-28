@@ -1,7 +1,7 @@
 import pygame
 
 from .._net import Global
-from .cache import Assets
+#from .cache import Assets
 from ..helpers.utils import change_layer
 from ..physics.collisions import CollisionRect
 

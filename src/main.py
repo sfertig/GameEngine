@@ -1,5 +1,6 @@
 import pygame
 import sys
+import os
 from ._net import Global, _global_
 from .basics.input import Keys
 from .physics.collisions import CollisionRect
@@ -73,7 +74,7 @@ class Engine:
                 i = Global.objects[layer]
                 for obj in i:
                     try:
-                        obj.update()
+                        obj.render()
                     except AttributeError:
                         pass
             layer+=1
@@ -85,6 +86,7 @@ class Engine:
         pygame.display.flip()
 
     def exit(self):
+        os.system("cls")
         pygame.quit()
         sys.exit()
 

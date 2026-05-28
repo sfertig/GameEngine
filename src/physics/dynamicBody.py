@@ -20,6 +20,7 @@ class DynamicBody:
 
         self.shape = None
         self.image = None
+        self.animation = None
 
     def change_layer(self, new_layer):
         change_layer(self, new_layer, self.layer)
@@ -46,4 +47,8 @@ class DynamicBody:
         if self.image is not None:
             self.image.x = self.x
             self.image.y = self.y
+
+        if self.animation is not None:
+            self.animation.x = self.x
+            self.animation.y = self.y
 
