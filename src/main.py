@@ -57,7 +57,10 @@ class Engine:
             if layer in Global.objects:
                 i = Global.objects[layer]
                 for obj in i:
-                    if hasattr(obj, "update"): obj.update()
+                    try:
+                        obj.update()
+                    except AttributeError:
+                        pass
             layer+=1
         
 
@@ -69,8 +72,10 @@ class Engine:
             if layer in Global.objects:
                 i = Global.objects[layer]
                 for obj in i:
-                    if hasattr(obj, "render"): 
-                        obj.render()
+                    try:
+                        obj.update()
+                    except AttributeError:
+                        pass
             layer+=1
         
 
