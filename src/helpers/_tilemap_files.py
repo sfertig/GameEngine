@@ -19,7 +19,6 @@ def __loadTileMap_json__(path):
     info = {}
     for key, value in data.items():
         info[extract_tuple_from_str(key)] = tuple(value)
-    print(info)
     return info
 
 def extract_tuple_from_str(str):

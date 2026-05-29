@@ -7,13 +7,15 @@ from ..basics.input import Keys
 from ..helpers._tilemap_files import __saveTileMap_json__, __loadTileMap_json__
 
 class Tilemap:
-    def __init__(self, name, tileset, show=True, layer=3):
+    def __init__(self, name, tileset, show=True, layer=3, dataFile=None):
         self.name = name
         self.tileset: dict[tuple[int, int], pygame.surface.Surface] = tileset
         self.width = tileset[0, 0].get_width()
         self.height = tileset[0, 0].get_height()
         self.show = show
         self.layer = layer
+
+        self.dataFile = dataFile
 
         self.tiles: dict[tuple[int, int ], tuple[int, int]] = {}
 
@@ -23,13 +25,18 @@ class Tilemap:
         change_layer(self, new_layer, self.layer)
         self.layer = new_layer
 
-    def manual_save_json(self, path):
+    def manual_save_json(self, path=None):
+        if path and self.dataFile == None: return
+        if path is None: path = self.dataFile
         __saveTileMap_json__(path, self.tiles)
     def manual_load_json(self, path):
+        if path and self.dataFile == None: return
+        if path is None: path = self.dataFile
         self.tiles = __loadTileMap_json__(path)
 
     def activateEditor(self):
         _TileMapEditor(600, 800, self).run()
+        self.manual_save_json()
 
     def render(self):
         if not self.show: return
