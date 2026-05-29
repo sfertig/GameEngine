@@ -18,6 +18,7 @@ class Tilemap:
         self.dataFile = dataFile
 
         self.tiles: dict[tuple[int, int ], tuple[int, int]] = {}
+        self.collisions: dict[tuple[int, int], int] = {}
 
         Global.add_object(layer, self)
 
@@ -28,11 +29,11 @@ class Tilemap:
     def manual_save_json(self, path=None):
         if path and self.dataFile == None: return
         if path is None: path = self.dataFile
-        __saveTileMap_json__(path, self.tiles)
+        __saveTileMap_json__(path, self.tiles, self.collisions)
     def manual_load_json(self, path):
         if path and self.dataFile == None: return
         if path is None: path = self.dataFile
-        self.tiles = __loadTileMap_json__(path)
+        self.tiles, self.collisions = __loadTileMap_json__(path)
 
     def activateEditor(self):
         _TileMapEditor(600, 800, self).run()
