@@ -129,7 +129,7 @@ class _TileMapEditor:
         pygame.draw.rect(self.screen, "white", (tpos[0]*self.map.width-self.cam.x, tpos[1]*self.map.height-self.cam.y, self.map.width, self.map.height), 1)
 
         #test
-        pygame.draw.rect(self.screen, "gray", pygame.Rect(0, 0, self.width, 200))
+        #pygame.draw.rect(self.screen, "gray", pygame.Rect(0, 0, self.width, 200))
 
         #update
         self.win.flip()
