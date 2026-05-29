@@ -5,7 +5,7 @@ from src import *
 pygame.init()
 
 game = Engine(bg="green", RESIZABLE=True)
-#game.create_aroundScreen_bounds()
+game.create_aroundScreen_bounds()
 G = game._func_get_global_()
 cam = Camera()
 
@@ -21,10 +21,7 @@ rect.animation = Assets.get_animation("test")
 map = Tilemap("map1", Assets.tilesets["map1"], layer=1, dataFile="test.json")
 map.manual_load_json("test.json")
 
-Rect(100, 100, 50, 60, "red", 5, enableCollision=True)
-for i in G.collisions:
-    print(i.layers)
-
+Rect(200, 300, 50, 50, "red", enableCollision=True)
 
 while True:
     game.Tick()
@@ -39,5 +36,4 @@ while True:
     if Keys.is_held(Keys.d): rect.vx=speed
 
     if Keys.is_pressed(Keys.escape): map.activateEditor()
-    if Keys.is_pressed(Keys.p): map.manual_save_json("test.json")
 

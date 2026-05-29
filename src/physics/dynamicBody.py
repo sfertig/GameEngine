@@ -27,16 +27,23 @@ class DynamicBody:
         self.layer = new_layer
 
     def update(self):
+
+        #x movement
         self.x+=self.vx*Global.dt
-        self.y+=self.vy*Global.dt
         #if collisions, back up
         self.collision.x = self.x
-        self.collision.y = self.y
         if self.collision.isColliding():
             self.x-=self.vx*Global.dt
-            self.y-=self.vy*Global.dt
 
         self.collision.x = self.x
+
+        #y movement
+        self.y+=self.vy*Global.dt
+        #if collisions, back up
+        self.collision.y = self.y
+        if self.collision.isColliding():
+            self.y-=self.vy*Global.dt
+
         self.collision.y = self.y
 
         #update any other positions now
