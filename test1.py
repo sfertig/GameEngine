@@ -20,7 +20,7 @@ rect.animation = Assets.get_animation("test")
 
 map = Tilemap("map1", Assets.tilesets["map1"], layer=1)
 map.tiles[(1, 1)] = (0, 0)
-print(map.tiles)
+map.manual_load_json("test.json")
 
 
 while True:
