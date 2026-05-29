@@ -21,7 +21,7 @@ class Image:
 
         self.collision: CollisionRect = None
         if enableCollision:
-            self.collision = CollisionRect(x, y, image.get_width(), image.get_height())
+            self.collision = CollisionRect(x, y, image.get_width(), image.get_height(), [layer])
 
         Global.add_object(layer, self)
 
@@ -34,7 +34,7 @@ class Image:
         self.scale = scale
 
     def enableCollision(self):
-        self.collision = CollisionRect(self.x, self.y, self.image.get_width(), self.image.get_height())
+        self.collision = CollisionRect(self.x, self.y, self.image.get_width(), self.image.get_height(), [self.layer])
 
     def update(self):
         if self.collision is not None:

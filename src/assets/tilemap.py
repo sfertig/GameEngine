@@ -54,7 +54,7 @@ class _TileMapEditor:
         self.running = True
 
         self.cam = Camera(-width/2, -height/2)
-        self.cam_speed = 150
+        self.cam_speed = 275
 
         self.win = pygame.Window("Tilemap Editor", (width, height))
         self.screen = self.win.get_surface()

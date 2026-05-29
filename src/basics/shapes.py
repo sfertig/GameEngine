@@ -30,7 +30,7 @@ class Rect(_Shape):
         self._width=_width
         Global.add_object(layer, self)
         if enableCollision:
-            self.collision: CollisionRect = CollisionRect(x, y, width, height)
+            self.collision: CollisionRect = CollisionRect(x, y, width, height, [layer])
 
     def change_layer(self, new_layer):
         change_layer(self, new_layer, self.layer)
@@ -40,7 +40,7 @@ class Rect(_Shape):
         return pygame.Rect(self.x, self.y, self.width, self.height)
     
     def enableCollision(self):
-        self.collision = CollisionRect(self.x, self.y, self.width, self.height)
+        self.collision = CollisionRect(self.x, self.y, self.width, self.height, [self.layer])
 
     def render(self):
         if self.show:
@@ -59,14 +59,14 @@ class Circle(_Shape):
         Global.add_object(layer, self)
 
         if enableCollision:
-            self.collision = CollisionRect(x, y, radius*2, radius*2)
+            self.collision = CollisionRect(x, y, radius*2, radius*2, [layer])
 
     def change_layer(self, new_layer):
         change_layer(self, new_layer, self.layer)
         self.layer = new_layer
 
     def enableCollision(self):
-        self.collision = CollisionRect(self.x, self.y, self.r*2, self.r*2)
+        self.collision = CollisionRect(self.x, self.y, self.r*2, self.r*2, [self.layer])
 
     def render(self):
         if self.show:

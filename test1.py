@@ -5,7 +5,7 @@ from src import *
 pygame.init()
 
 game = Engine(bg="green", RESIZABLE=True)
-game.create_aroundScreen_bounds()
+#game.create_aroundScreen_bounds()
 G = game._func_get_global_()
 cam = Camera()
 
@@ -15,11 +15,15 @@ Assets.new_animation(Assets.get_image("test"), "test", [0, 2], 32, 32, loop=True
 #load tileset into assets
 Assets.new_tileset("tests/assets/levelTiles.png", "map1", scale=2.0)
 
-rect = DynamicBody(0, 0, Assets.get_image("test").get_width(), Assets.get_image("test").get_height())
+rect = DynamicBody(0, 0, 32, 32)
 rect.animation = Assets.get_animation("test")
 
 map = Tilemap("map1", Assets.tilesets["map1"], layer=1, dataFile="test.json")
 map.manual_load_json("test.json")
+
+Rect(100, 100, 50, 60, "red", 5, enableCollision=True)
+for i in G.collisions:
+    print(i.layers)
 
 
 while True:

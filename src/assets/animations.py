@@ -38,7 +38,7 @@ class Animation:
 
         self.collision = None
         if enableCollision:
-            self.collision = CollisionRect(x, y, width, height)
+            self.collision = CollisionRect(x, y, width, height, [layer])
             self.collision.layers = [layer]
 
     def change_layer(self, new_layer):
@@ -59,7 +59,7 @@ class Animation:
                     self.frame = 0
 
     def enableCollision(self):
-        self.collision = CollisionRect(self.x, self.y, self.image.get_width(), self.image.get_height())
+        self.collision = CollisionRect(self.x, self.y, self.image.get_width(), self.image.get_height(), [self.layer])
 
     def get_frame(self):
         return self.frames[self.frame]
