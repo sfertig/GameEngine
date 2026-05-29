@@ -7,7 +7,7 @@ pygame.init()
 game = Engine(bg="green", RESIZABLE=True)
 game.create_aroundScreen_bounds()
 G = game._func_get_global_()
-cam = Camera(_main_cam_set_=True)
+cam = Camera()
 
 Assets.new_image("tests/assets/test.png", "test", scale=2.0)
 Assets.new_animation(Assets.get_image("test"), "test", [0, 2], 32, 32, loop=True, show=True, speed=0.4)
@@ -36,4 +36,5 @@ while True:
     if Keys.is_held(Keys.d): rect.vx=speed
 
     if Keys.is_pressed(Keys.escape): map.activateEditor()
+    if Keys.is_pressed(Keys.p): map.manual_save_json("test.json")
 

@@ -4,6 +4,8 @@ from ..helpers.utils import change_layer
 from ..basics.camera import Camera
 from ..basics.input import Keys
 
+from ..helpers._tilemap_files import __saveTileMap_json__
+
 class Tilemap:
     def __init__(self, name, tileset, show=True, layer=3):
         self.name = name
@@ -20,6 +22,9 @@ class Tilemap:
     def change_layer(self, new_layer):
         change_layer(self, new_layer, self.layer)
         self.layer = new_layer
+
+    def manual_save_json(self, path):
+        __saveTileMap_json__(path, self.tiles)
 
     def activateEditor(self):
         _TileMapEditor(600, 800, self).run()
