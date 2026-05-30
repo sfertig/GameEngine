@@ -31,3 +31,4 @@ def __loadTileMap_json__(path):
 
 def extract_tuple_from_str(str):
     return tuple(float(x) for x in str[1:-1].split(","))
+

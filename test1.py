@@ -21,7 +21,6 @@ rect.animation = Assets.get_animation("test")
 map = Tilemap("map1", Assets.tilesets["map1"], layer=1, dataFile="test.json")
 map.manual_load_json("test.json")
 
-Rect(200, 300, 50, 50, "red", enableCollision=True)
 
 while True:
     game.Tick()

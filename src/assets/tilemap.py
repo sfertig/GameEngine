@@ -3,8 +3,16 @@ from .._net import Global
 from ..helpers.utils import change_layer
 from ..basics.camera import Camera
 from ..basics.input import Keys
+from ..physics.collisions import CollisionRect
 
 from ..helpers._tilemap_files import __saveTileMap_json__, __loadTileMap_json__
+
+#tilemap collision types
+COL_FULL = 1
+COL_HALF_TOP = 2
+COL_HALF_BOTTOM = 3
+COL_HALF_LEFT = 4
+COL_HALF_RIGHT = 5
 
 class Tilemap:
     def __init__(self, name, tileset, show=True, layer=3, dataFile=None):
@@ -18,13 +26,18 @@ class Tilemap:
         self.dataFile = dataFile
 
         self.tiles: dict[tuple[int, int ], tuple[int, int]] = {}
-        self.collisions: dict[tuple[int, int], int] = {}
+        self.collisions: list[CollisionRect] = []
+        self.collDef = dict[tuple[int, int], int] = {}
 
         Global.add_object(layer, self)
 
     def change_layer(self, new_layer):
         change_layer(self, new_layer, self.layer)
         self.layer = new_layer
+
+    def __gen_collision_shapes(self):
+        #TODO add collision shapes
+        pass
 
     def manual_save_json(self, path=None):
         if path and self.dataFile == None: return
@@ -34,10 +47,12 @@ class Tilemap:
         if path and self.dataFile == None: return
         if path is None: path = self.dataFile
         self.tiles, self.collisions = __loadTileMap_json__(path)
+        self.__gen_collision_shapes()
 
     def activateEditor(self):
         _TileMapEditor(600, 800, self).run()
         self.manual_save_json()
+        self.__gen_collision_shapes()
 
     def render(self):
         if not self.show: return
@@ -47,6 +62,9 @@ class Tilemap:
             if tx > -self.width and tx < Global.screen.get_width()+self.width and ty > -self.height and ty < Global.screen.get_height()+self.height:
                 image = self.tileset[tile]
                 Global.screen.blit(image, (tx, ty))
+        #collision rendering for debug
+        for collision in self.collisions:
+            collision.render()
 
 class _TileMapEditor:
     def __init__(self, width, height, map: Tilemap):
