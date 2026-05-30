@@ -43,20 +43,63 @@ class Tilemap:
 
     def __gen_collision_shapes(self):
         self.collisions.clear()
-        print("Generating collision shapes...")
+        
+        # Separate tiles into shapes
+        full = []
+        
         for key, value in self.tiles.items():
-            if value not in self.collDef: continue
-            #else generate collision shape
+            if value not in self.collDef: 
+                continue
+            # CORRECTION: Appending 'key' (grid pos) instead of 'value' (tile type)
             if self.collDef[value] == COL_FULL:
-                self.collisions.append(CollisionRect(key[0]*self.width, key[1]*self.height, self.width, self.height, self.collisionLayers))
-            if self.collDef[value] == COL_HALF_TOP:
-                self.collisions.append(CollisionRect(key[0]*self.width, key[1]*self.height, self.width, self.height/2, self.collisionLayers))
-            if self.collDef[value] == COL_HALF_BOTTOM:
-                self.collisions.append(CollisionRect(key[0]*self.width, key[1]*self.height+self.height/2, self.width, self.height/2, self.collisionLayers))
-            if self.collDef[value] == COL_HALF_LEFT:
-                self.collisions.append(CollisionRect(key[0]*self.width, key[1]*self.height, self.width/2, self.height, self.collisionLayers))
-            if self.collDef[value] == COL_HALF_RIGHT:
-                self.collisions.append(CollisionRect(key[0]*self.width+self.width/2, key[1]*self.height, self.width/2, self.height, self.collisionLayers))
+                full.append(key)
+
+        # Gen collision shapes
+        used = []
+        rows = []
+        
+        # CORRECTION: Explicitly copy full to prevent list modification issues while iterating
+        remaining_full = list(full)
+        
+        while len(remaining_full) > 0:
+            # CORRECTION: Pop the first unvisited position to evaluate
+            pos = remaining_full.pop(0)
+            if pos in used:
+                continue
+                
+            col = CollisionRect(pos[0]*self.width, pos[1]*self.height, self.width, self.height, self.collisionLayers)
+            used.append(pos)
+            
+            # Other tile check
+            for tile in full:
+                if tile in used: 
+                    continue
+                if not tile_beside(pos, tile): 
+                    continue
+                    
+                if tile[0] == pos[0]+1 and tile[1] == pos[1]: # Beside to the right
+                    col.width += self.width
+                    # CORRECTION: Removed 'col.x -= self.width'. Growing right only increases width.
+                    used.append(tile)
+                elif tile[0] == pos[0]-1 and tile[1] == pos[1]: # Beside to the left
+                    col.width += self.width
+                    col.x -= self.width # Growing left shifts the start position back
+                    used.append(tile)
+                    
+            # else tile is not to left or right
+            rows.append(col)
+            # CORRECTION: Re-sync remaining items based on global used list
+            remaining_full = [t for t in full if t not in used]
+            
+        # CORRECTION: Make sure generated rectangles are actually added to your active collisions list
+        for r in rows:
+            self.collisions.append(r)
+            
+        print(self.collisions)
+
+
+
+
 
 
     def manual_save_json(self, path=None):
@@ -85,6 +128,13 @@ class Tilemap:
         #collision rendering for debug
         for collision in self.collisions:
             collision.render()
+
+def tile_beside(pos, _pos):
+    if _pos[0] == pos[0]+1: return True
+    elif _pos[0] == pos[0]-1: return True
+    elif _pos[1] == pos[1]+1: return True
+    elif _pos[1] == pos[1]-1: return True
+    return False
 
 class _TileMapEditor:
     def __init__(self, width, height, map: Tilemap):

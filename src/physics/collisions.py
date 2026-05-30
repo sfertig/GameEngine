@@ -1,5 +1,5 @@
 import pygame
-
+import random
 from .._net import Global
 
 
@@ -8,7 +8,9 @@ class CollisionRect:
         self.x, self.y, self.width, self.height = x, y, width, height
         self.layers = layers
         Global.collisions.append(self)
-        self.active = True
+        self.active = True\
+        
+        self.color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
     def rect(self):
         return pygame.Rect(self.x, self.y, self.width, self.height)
@@ -28,4 +30,4 @@ class CollisionRect:
         rect = self.rect()
         rect.x = self.x-Global.cam.x
         rect.y = self.y-Global.cam.y
-        pygame.draw.rect(Global.screen, "yellow", rect)
+        pygame.draw.rect(Global.screen, self.color, rect)
