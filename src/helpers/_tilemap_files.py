@@ -11,7 +11,7 @@ def __saveTileMap_json__(path, data:dict[tuple[int, int ], tuple[int, int]], col
         new_data[str(key)] = [value[0], value[1]]
     new_collisions = {}
     for key, value in collisions.items():
-        new_collisions[str(key)] = [value[0], value[1]]
+        new_collisions[str(key)] = value
     #save file
     with open(path, "w") as f:
         json.dump({"map": new_data, "coll": new_collisions}, f)

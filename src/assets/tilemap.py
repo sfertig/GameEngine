@@ -15,7 +15,7 @@ COL_HALF_LEFT = 4
 COL_HALF_RIGHT = 5
 
 class Tilemap:
-    def __init__(self, name, tileset, show=True, layer=3, dataFile=None):
+    def __init__(self, name, tileset, show=True, layer=3, dataFile=None, collisionLayers=None):
         self.name = name
         self.tileset: dict[tuple[int, int], pygame.surface.Surface] = tileset
         self.width = tileset[0, 0].get_width()
@@ -23,11 +23,14 @@ class Tilemap:
         self.show = show
         self.layer = layer
 
+        if collisionLayers is not None: self.collisionLayers = collisionLayers
+        else: self.collisionLayers = [layer]
+
         self.dataFile = dataFile
 
         self.tiles: dict[tuple[int, int ], tuple[int, int]] = {}
-        self.collisions: list[CollisionRect] = []
-        self.collDef = dict[tuple[int, int], int] = {}
+        self.collisions = []
+        self.collDef: dict[tuple[int, int], int] = {}
 
         Global.add_object(layer, self)
 
@@ -36,17 +39,31 @@ class Tilemap:
         self.layer = new_layer
 
     def __gen_collision_shapes(self):
-        #TODO add collision shapes
-        pass
+        self.collisions.clear()
+        print("Generating collision shapes...")
+        for key, value in self.tiles.items():
+            if value not in self.collDef: continue
+            #else generate collision shape
+            if self.collDef[value] == COL_FULL:
+                self.collisions.append(CollisionRect(key[0]*self.width, key[1]*self.height, self.width, self.height, self.collisionLayers))
+            if self.collDef[value] == COL_HALF_TOP:
+                self.collisions.append(CollisionRect(key[0]*self.width, key[1]*self.height, self.width, self.height/2, self.collisionLayers))
+            if self.collDef[value] == COL_HALF_BOTTOM:
+                self.collisions.append(CollisionRect(key[0]*self.width, key[1]*self.height+self.height/2, self.width, self.height/2, self.collisionLayers))
+            if self.collDef[value] == COL_HALF_LEFT:
+                self.collisions.append(CollisionRect(key[0]*self.width, key[1]*self.height, self.width/2, self.height, self.collisionLayers))
+            if self.collDef[value] == COL_HALF_RIGHT:
+                self.collisions.append(CollisionRect(key[0]*self.width+self.width/2, key[1]*self.height, self.width/2, self.height, self.collisionLayers))
+
 
     def manual_save_json(self, path=None):
         if path and self.dataFile == None: return
         if path is None: path = self.dataFile
-        __saveTileMap_json__(path, self.tiles, self.collisions)
+        __saveTileMap_json__(path, self.tiles, self.collDef)
     def manual_load_json(self, path):
         if path and self.dataFile == None: return
         if path is None: path = self.dataFile
-        self.tiles, self.collisions = __loadTileMap_json__(path)
+        self.tiles, self.collDef = __loadTileMap_json__(path)
         self.__gen_collision_shapes()
 
     def activateEditor(self):

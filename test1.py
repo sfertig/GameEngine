@@ -18,8 +18,9 @@ Assets.new_tileset("tests/assets/levelTiles.png", "map1", scale=2.0)
 rect = DynamicBody(0, 0, 32, 32)
 rect.animation = Assets.get_animation("test")
 
-map = Tilemap("map1", Assets.tilesets["map1"], layer=1, dataFile="test.json")
+map = Tilemap("map1", Assets.tilesets["map1"], layer=1, dataFile="test.json", collisionLayers=game.all_colision_layers())
 map.manual_load_json("test.json")
+
 
 
 while True:

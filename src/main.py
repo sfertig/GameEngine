@@ -8,7 +8,7 @@ from .assets.cache import Assets
 
 MIN_LAYER = -5
 MAX_LAYER = 10
-layers = [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+ALL_COLLISION_LAYERS = [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
 class Engine:
     def __init__(self, bg="black", title="Pygame Win", width=800, height=600, RESIZABLE=False, TARGET_FPS=60):
@@ -98,6 +98,8 @@ class Engine:
         self.screen_dim = (w, h)
         Global.FW = w / self.screen_dim[0]
         Global.FH = h / self.screen_dim[1]
+    def all_colision_layers(self):
+        return ALL_COLLISION_LAYERS
 
     def manual_resize(self, width, height):
         self._display = pygame.display.set_mode((width, height), flags=pygame.RESIZABLE)
@@ -106,10 +108,10 @@ class Engine:
         Global.FH = height / self.screen_dim[1]
 
     def create_aroundScreen_bounds(self):
-        CollisionRect(0, -5, self.screen_dim[0], 5, layers)
-        CollisionRect(-5, 0, 5, self.screen_dim[1], layers)
-        CollisionRect(self.screen_dim[0], 0, 5, self.screen_dim[1], layers)
-        CollisionRect(0, self.screen_dim[1], self.screen_dim[0], 5, layers)
+        CollisionRect(0, -5, self.screen_dim[0], 5, ALL_COLLISION_LAYERS)
+        CollisionRect(-5, 0, 5, self.screen_dim[1], ALL_COLLISION_LAYERS)
+        CollisionRect(self.screen_dim[0], 0, 5, self.screen_dim[1], ALL_COLLISION_LAYERS)
+        CollisionRect(0, self.screen_dim[1], self.screen_dim[0], 5, ALL_COLLISION_LAYERS)
 
     def _func_get_global_(self) -> _global_:
         print("<Engine> Global accsesed")
