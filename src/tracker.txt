@@ -9,5 +9,5 @@ TILEMAP EDITOR:
     opens window for placing and removing tiles, with arrow key tile switching
 
 TILEMAP COLLISION GEN:
-    v0
-    not implemented yet
+    v1
+    Generates seperate collisionRects for each tile.
