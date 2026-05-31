@@ -10,10 +10,14 @@ class CollisionRect:
         Global.collisions.append(self)
         self.active = True\
         
-        self.color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+        self.color = (random.randint(0, 255), 0, random.randint(0, 255))
 
     def rect(self):
         return pygame.Rect(self.x, self.y, self.width, self.height)
+    
+    def Del(self):
+        if self not in Global.collisions: return
+        Global.collisions.remove(self)
     
     def isColliding(self):
         if not self.active: return False

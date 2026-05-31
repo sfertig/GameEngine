@@ -116,6 +116,14 @@ class Engine:
     def _func_get_global_(self) -> _global_:
         print("<Engine> Global accsesed")
         return Global
+    
+    def get_current_fps(self):
+        return self.clock.get_fps()
+    
+    def change_title(self, title):
+        Global.title = title
+        pygame.display.set_caption(title)
+        self.title = title
 
 
 

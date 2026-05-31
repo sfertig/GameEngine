@@ -14,7 +14,7 @@ from .basics.shapes import Rect, Circle
 from .assets.cache import Assets
 from .assets.images import Image
 from .physics.dynamicBody import DynamicBody
-from .assets.tilemap import Tilemap
+from .assets.tilemap import Tilemap, TILEMAP_COLLISION_GEN
 
 __all__ = [
     "Engine",
@@ -26,4 +26,5 @@ __all__ = [
     "Image",
     "DynamicBody",
     "Tilemap",
+    "TILEMAP_COLLISION_GEN",
     ]

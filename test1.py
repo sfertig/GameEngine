@@ -4,7 +4,7 @@ from src import *
 
 pygame.init()
 
-game = Engine(bg="green", RESIZABLE=True)
+game = Engine(bg="green", RESIZABLE=True, TARGET_FPS=60)
 game.create_aroundScreen_bounds()
 G = game._func_get_global_()
 cam = Camera()
@@ -25,6 +25,7 @@ map.manual_load_json("test.json")
 
 while True:
     game.Tick()
+    game.change_title(str(int(game.get_current_fps())))
 
     rect.vx=0.0
     rect.vy=0.0
