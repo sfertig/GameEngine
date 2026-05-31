@@ -6,7 +6,7 @@ from ..basics.camera import Camera
 from ..basics.input import Keys
 from ..physics.collisions import CollisionRect
 
-from ..helpers._tilemap_files import __saveTileMap_json__, __loadTileMap_json__, __gen_collision_shapes
+from ..helpers._tilemap_files import __saveTileMap_json__, __loadTileMap_json__, gen_collision_shapes
 
 #tilemap collision types
 COL_FULL = 1
@@ -40,15 +40,15 @@ class Tilemap:
         Global.add_object(layer, self)
 
         #fallback for hardcoded tilemaps (no loading from file)
-        self.__gen_collision_shapes()
+        self.__gen_self_collision_shapes()
 
     def change_layer(self, new_layer):
         change_layer(self, new_layer, self.layer)
         self.layer = new_layer
 
     
-    def __gen_collision_shapes(self):
-        __gen_collision_shapes(self, COL_FULL, COL_HALF_TOP, COL_HALF_BOTTOM, COL_HALF_LEFT, COL_HALF_RIGHT, TILEMAP_COLLISION_GEN, SEARCH_TIME)
+    def __gen_self_collision_shapes(self):
+        gen_collision_shapes(self, COL_FULL, COL_HALF_TOP, COL_HALF_BOTTOM, COL_HALF_LEFT, COL_HALF_RIGHT, SEARCH_TIME)
 
     def manual_save_json(self, path=None):
         if path and self.dataFile == None: return
@@ -58,12 +58,12 @@ class Tilemap:
         if path and self.dataFile == None: return
         if path is None: path = self.dataFile
         self.tiles, self.collDef = __loadTileMap_json__(path)
-        self.__gen_collision_shapes()
+        self.__gen_self_collision_shapes()
 
     def activateEditor(self):
         _TileMapEditor(600, 800, self).run()
         self.manual_save_json()
-        self.__gen_collision_shapes()
+        self.__gen_self_collision_shapes()
 
     def render(self):
         if not self.show: return
