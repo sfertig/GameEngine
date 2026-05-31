@@ -11,12 +11,14 @@ MAX_LAYER = 10
 ALL_COLLISION_LAYERS = [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
 class Engine:
-    def __init__(self, bg="black", title="Pygame Win", width=800, height=600, RESIZABLE=False, TARGET_FPS=60):
-        if RESIZABLE: self._display = pygame.display.set_mode((width, height), flags=pygame.RESIZABLE)
+    def __init__(self, bg="black", title="Pygame Win", width=800, height=600, EXPERIMENTAL_RESIZABLE=False, TARGET_FPS=60):
+        if EXPERIMENTAL_RESIZABLE: self._display = pygame.display.set_mode((width, height), flags=pygame.RESIZABLE)
         else: self._display = pygame.display.set_mode((width, height))
 
         self.screen_dim = (width, height)
-        self.RESIZABLE = RESIZABLE
+        self.width = width
+        self.height = height
+        self.RESIZABLE = EXPERIMENTAL_RESIZABLE
 
         self.screen = pygame.surface.Surface((width, height))
         self.bg = bg
