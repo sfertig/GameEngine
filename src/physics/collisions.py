@@ -8,7 +8,7 @@ class CollisionRect:
         self.x, self.y, self.width, self.height = x, y, width, height
         self.layers = layers
         Global.collisions.append(self)
-        self.active = True\
+        self.active = True
         
         self.color = (random.randint(0, 255), 0, random.randint(0, 255))
 
@@ -29,6 +29,9 @@ class CollisionRect:
                         return True
 
         return False
+
+    def copy(self):
+        return CollisionRect(self.x, self.y, self.width, self.height, self.layers)
     
     def render(self):
         rect = self.rect()

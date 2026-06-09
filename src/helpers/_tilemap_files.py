@@ -62,29 +62,7 @@ def gen_collision_shapes(self, COL_FULL, COL_HALF_TOP, COL_HALF_BOTTOM, COL_HALF
     # Gen collision shapes
     _tiles = []
     used = []
-    rows: list[CollisionRect] = []
-    for pos in full:
-        if pos in used: continue
-        #else creat new collision and run search
-        col = CollisionRect(pos[0]*self.width, pos[1]*self.height, self.width, self.height, self.collisionLayers)
-        #run search through tiles
-        for i in range(SEARCH_TIME):
-            for tile in full:
-                if tile in used: continue
-                #else check if it can be added to col shape
-                #if to the left
-                if tile[0] == (col.x//self.width)-1 and tile[1] == pos[1]:
-                    col.x -= self.width
-                    col.width += self.width
-                    used.append(tile)
-                #else check if it is to the right
-                if tile[0] == (col.x+col.width)//self.width and tile[1] == pos[1]:
-                    col.width += self.width
-                    used.append(tile)
-                #else leave it be
-        #apend col to rows
-        rows.append(col)
-    used.clear()
+    rows: list[CollisionRect] = _gen_tiles_left_right([], used, full, self, SEARCH_TIME, CollisionRect(0, 0, self.width, self.height))
     #join rows to form rects
     for shape in rows:
         if shape in used: continue
@@ -105,11 +83,38 @@ def gen_collision_shapes(self, COL_FULL, COL_HALF_TOP, COL_HALF_BOTTOM, COL_HALF
                     shape.height += other_shape.height
                     other_shape.Del()
                     used.append(other_shape)
+        
     
         
     # CORRECTION: Make sure generated rectangles are actually added to your active collisions list
     for i in _tiles:
         self.collisions.append(i)
-    print(len(self.collisions))
-    print(len(Global.collisions))
+    #print(len(self.collisions))
+    #print(len(Global.collisions))
+
+def _gen_tiles_left_right(_tiles: list[CollisionRect], used: list, _pos_list: list[tuple], self, SEARCH_TIME: int, shape: CollisionRect):
+    used.clear()
+    for pos in _pos_list:
+        if pos in used: continue
+        col = CollisionRect.copy(shape)
+        #move shape to correct position
+        col.x = pos[0]*self.width
+        col.y = pos[1]*self.height
+        _tiles.append(col)
+        used.append(pos)
+        #run search through tiles
+        for i in range(SEARCH_TIME):
+            for tile in _pos_list:
+                if tile in used: continue
+                #else check left then right
+                if tile[0] == (col.x//self.width)-1 and tile[1] == pos[1]:
+                    col.x -= self.width
+                    col.width += self.width
+                    used.append(tile)
+                elif tile[0] == (col.x+col.width)//self.width and tile[1] == pos[1]:
+                    col.width += self.width
+                    used.append(tile)
+                #else leave it be
+    return _tiles
+
 

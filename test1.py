@@ -21,12 +21,7 @@ cam.set_follow_target(rect)
 
 map = Tilemap("map1", Assets.tilesets["map1"], layer=1, dataFile="test.json", collisionLayers=game.all_colision_layers())
 map.manual_load_json("test.json")
-map.collDef[(2, 0)] = 1
-map.collDef[(2, 1)] = 5
-map.collDef[(2, 2)] = 1
-map.collDef[(1, 3)] = 3
-map.collDef[(0, 2)] = 1
-map.collDef[(0, 1)] = 4
+
 
 
 
