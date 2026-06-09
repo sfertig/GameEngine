@@ -4,7 +4,7 @@ from src import *
 
 pygame.init()
 
-game = Engine(bg="green", TARGET_FPS=60)
+game = Engine(bg="green", TARGET_FPS=60, EXPERIMENTAL_RESIZABLE=True)
 #game.create_aroundScreen_bounds()
 G = game._func_get_global_()
 cam = Camera()

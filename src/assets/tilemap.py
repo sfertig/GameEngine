@@ -60,8 +60,8 @@ class Tilemap:
         self.tiles, self.collDef = __loadTileMap_json__(path)
         self.__gen_self_collision_shapes()
 
-    def activateEditor(self):
-        _TileMapEditor(600, 800, self).run()
+    def activateEditor(self, exit_key=Keys.escape):
+        _TileMapEditor(Global.display.get_width(), Global.display.get_height(), self, exit_key).run()
         self.manual_save_json()
         self.__gen_self_collision_shapes()
 
@@ -87,10 +87,13 @@ def tile_above(pos, _pos):
     return False
 
 class _TileMapEditor:
-    def __init__(self, width, height, map: Tilemap):
+    def __init__(self, width, height, map: Tilemap, exit_key):
         self.width, self.height = width, height
         self.map = map
         self.running = True
+        self.exit_key = exit_key
+
+        self.cooldown = False
 
         self.cam = Camera(-width/2, -height/2)
         self.cam_speed = 275
@@ -116,6 +119,11 @@ class _TileMapEditor:
         pygame.mouse.set_visible(True)
 
     def update(self):
+        #if need to exit
+        if Keys.is_pressed(self.exit_key) and self.cooldown:
+            self.running = False
+            return
+        else: self.cooldown = True
         self.dt = self.clock.tick(self.FPS) / 1000
         Global.events = pygame.event.get()
         for event in Global.events:
