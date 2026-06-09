@@ -34,6 +34,7 @@ class Engine:
         Global.title = self.title
         Global.clock = self.clock
         Global.assets = Assets
+        Global.all_collision_layers = ALL_COLLISION_LAYERS
 
     def Tick(self):
         self.update()

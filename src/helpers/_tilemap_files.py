@@ -62,7 +62,7 @@ def gen_collision_shapes(self, COL_FULL, COL_HALF_TOP, COL_HALF_BOTTOM, COL_HALF
     # Gen collision shapes
     _tiles = []
     used = []
-    rows: list[CollisionRect] = _gen_tiles_left_right([], used, full, self, SEARCH_TIME, CollisionRect(0, 0, self.width, self.height))
+    rows: list[CollisionRect] = _gen_tiles_left_right([], used, full, self, SEARCH_TIME, CollisionRect(0, 0, self.width, self.height, self.collisionLayers))
     #join rows to form rects
     for shape in rows:
         if shape in used: continue
@@ -84,7 +84,8 @@ def gen_collision_shapes(self, COL_FULL, COL_HALF_TOP, COL_HALF_BOTTOM, COL_HALF
                     other_shape.Del()
                     used.append(other_shape)
         
-    
+    #half top tiles
+    _tiles = _gen_tiles_left_right(_tiles, used, half_top, self, SEARCH_TIME, CollisionRect(0, 0, self.width, self.height//2, self.collisionLayers))
         
     # CORRECTION: Make sure generated rectangles are actually added to your active collisions list
     for i in _tiles:
@@ -115,6 +116,8 @@ def _gen_tiles_left_right(_tiles: list[CollisionRect], used: list, _pos_list: li
                     col.width += self.width
                     used.append(tile)
                 #else leave it be
+    #clear collisions shape used as template
+    shape.Del()
     return _tiles
 
 

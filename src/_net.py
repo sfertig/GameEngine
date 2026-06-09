@@ -26,6 +26,7 @@ class _global_:
 
         #collisions
         self.collisions = []
+        self.all_collision_layers = None
 
     def add_object(self, layer: str, obj):
         if layer not in self.objects:
