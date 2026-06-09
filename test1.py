@@ -28,7 +28,6 @@ map.manual_load_json("test.json")
 
 while True:
     game.Tick()
-    print(G.collisions)
     game.change_title(str(int(game.get_current_fps())))
 
     rect.vx=0.0
