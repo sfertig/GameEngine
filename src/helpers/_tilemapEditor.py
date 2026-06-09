@@ -4,6 +4,15 @@ from ..basics.camera import Camera
 from ..basics.input import Keys
 from .._net import Global
 
+def gen_collision_rects(width, height):
+    return {
+        1: pygame.Rect(0, 0, width, height),
+        2: pygame.Rect(0, 0, width, height//2),
+        3: pygame.Rect(0, height//2, width, height//2),
+        4: pygame.Rect(0, 0, width//2, height),
+        5: pygame.Rect(width//2, 0, width//2, height)
+    }
+
 class _TileMapEditor:
     def __init__(self, x, y, width, height, map, exit_key):
         self.width, self.height = width, height
@@ -28,6 +37,9 @@ class _TileMapEditor:
         #get the dim of the original tileset
         self.setDim = Global.assets._tileset_cache_data[self.map.name]
         self.setDim = (self.setDim[0]-1, self.setDim[1]-1)
+        self.colTypes = gen_collision_rects(self.map.width, self.map.height)
+        self.current_col_type = 1
+        self.mapColType = 5        
 
         #keys
         self.key_picking = Keys.tab
@@ -116,9 +128,43 @@ class _TileMapEditor:
         self.win.flip()
 
     def collision_logic(self):
-        pass
+        #change col type based on mouse wheel
+        for event in Global.events:
+            if event.type == pygame.MOUSEWHEEL:
+                if event.y > 0: self.current_col_type += 1
+                else: self.current_col_type -= 1
+                #wrap around
+                if self.current_col_type < 1: self.current_col_type = 5
+                elif self.current_col_type > 5: self.current_col_type = 1
+                break
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mpos = pygame.mouse.get_pos()
+                tpos = point_world_to_tilemap(mpos[0]+self.cam.x, mpos[1]+self.cam.y, self.map.width, self.map.height)
+                if event.button == 1:
+                    self.map.collDef[tpos] = self.current_col_type
+                elif event.button == 3:
+                    self.map.collDef.pop(tpos, None)
     def render_collision(self):
-        pass
+        #render tileset
+        for pos, image in self.map.tileset.items():
+            tx = pos[0] * self.map.width
+            ty = pos[1] * self.map.height
+            self.screen.blit(image, (tx-self.cam.x, ty-self.cam.y))
+        #render existing collisions on tiles
+        for pos, num in self.map.collDef.items():
+            rect = self.colTypes[num].copy()
+            rect.x += pos[0] * self.map.width - self.cam.x
+            rect.y += pos[1] * self.map.height - self.cam.y
+            pygame.draw.rect(self.screen, "red", rect, 2)
+        #render col rect on mouse
+        #draw square around mouse
+        mpos = pygame.mouse.get_pos()
+        tpos = point_world_to_tilemap(mpos[0]+self.cam.x, mpos[1]+self.cam.y, self.map.width, self.map.height)
+        rect = self.colTypes[self.current_col_type].copy()
+        rect.x += tpos[0] * self.map.width - self.cam.x
+        rect.y += tpos[1] * self.map.height - self.cam.y
+        pygame.draw.rect(self.screen, "green", rect)
+        pygame.draw.rect(self.screen, "white", (tpos[0]*self.map.width-self.cam.x, tpos[1]*self.map.height-self.cam.y, self.map.width, self.map.height), 1)
 
     def picking_logic(self):
         if pygame.mouse.get_pressed()[0]:
@@ -205,7 +251,7 @@ class _TileMapEditor:
         self.win.title = f"Tilemap Editor - {mode.capitalize()} Mode"
 
 def point_world_to_tilemap(x, y, width, height):
-    return (x//width, y//height)
+    return (int(x//width), int(y//height))
 
 
             
