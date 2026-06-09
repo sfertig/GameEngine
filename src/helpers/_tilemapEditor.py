@@ -25,9 +25,15 @@ class _TileMapEditor:
         self.dt = 0.0
 
         self.selected_tile = (0, 0)
-        #get the din of the original tileset
+        #get the dim of the original tileset
         self.setDim = Global.assets._tileset_cache_data[self.map.name]
         self.setDim = (self.setDim[0]-1, self.setDim[1]-1)
+
+        #keys
+        self.key_picking = Keys.tab
+        self.key_picking_exit = False
+        self.save_cam_pos = (0, 0)
+        self.can_click = True
 
     def run(self):
         pygame.mouse.set_visible(False)
@@ -62,9 +68,20 @@ class _TileMapEditor:
             self.cam_movement()
             self.tile_placing()
             self.basic_tile_selecting()
+            if Keys.is_pressed(self.key_picking):
+                self.mode = "picking"
+                self.save_cam_pos = (self.cam.x, self.cam.y)
+                self.cam.x, self.cam.y = 0, 0
         elif self.mode == "picking":
-            pass
-
+            if Keys.is_pressed(self.key_picking) and self.key_picking_exit:
+                self.mode = "painting"
+                self.cam.x, self.cam.y = self.save_cam_pos
+                self.key_picking_exit = False
+            else: self.key_picking_exit = True
+            #update logic
+            self.cam_movement()
+            self.picking_logic()
+            
 
     def render(self):
         self.screen.fill("black")
@@ -73,13 +90,30 @@ class _TileMapEditor:
             self.render_tiles()
         elif self.mode == "picking":
             self.render_picking()
-        
-
 
         #update
         self.win.flip()
 
+    def picking_logic(self):
+        if pygame.mouse.get_pressed()[0]:
+            mpos = pygame.mouse.get_pos()
+            tpos = point_world_to_tilemap(mpos[0]+self.cam.x, mpos[1]+self.cam.y, self.map.width, self.map.height)
+            self.selected_tile = tpos
+            self.mode = "painting"
+            self.cam.x, self.cam.y = self.save_cam_pos
+            self.key_picking_exit = False
+            self.can_click = False
+
     def render_picking(self):
+        #render tileset
+        for pos, image in self.map.tileset.items():
+            tx = pos[0] * self.map.width
+            ty = pos[1] * self.map.height
+            self.screen.blit(image, (tx-self.cam.x, ty-self.cam.y))
+        #render box around selected tile
+        tx = self.selected_tile[0] * self.map.width - self.cam.x
+        ty = self.selected_tile[1] * self.map.height - self.cam.y
+        pygame.draw.rect(self.screen, "yellow", (tx, ty, self.map.width, self.map.height), 2)
         #draw square around mouse
         mpos = pygame.mouse.get_pos()
         tpos = point_world_to_tilemap(mpos[0]+self.cam.x, mpos[1]+self.cam.y, self.map.width, self.map.height)
@@ -107,10 +141,11 @@ class _TileMapEditor:
 
     def tile_placing(self):
         #placing tile logic
-        if pygame.mouse.get_pressed()[0]:
+        if pygame.mouse.get_pressed()[0] and self.can_click:
             mpos = pygame.mouse.get_pos()
             tpos = point_world_to_tilemap(mpos[0]+self.cam.x, mpos[1]+self.cam.y, self.map.width, self.map.height)
             self.map.tiles[tpos] = self.selected_tile
+        elif not pygame.mouse.get_pressed()[0]: self.can_click = True
         #erasing logic
         if pygame.mouse.get_pressed()[2]:
             mpos = pygame.mouse.get_pos()
