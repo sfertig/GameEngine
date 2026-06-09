@@ -128,5 +128,31 @@ class Engine:
         pygame.display.set_caption(title)
         self.title = title
 
+    #scene logic
+    def new_scene(self, name, scene):
+        Global.scenes[name] = scene
+    def change_scene(self, name):
+        if name in Global.scenes:
+            if Global.current_scene is not None:
+                Global.last_scene = Global.current_scene
+                Global.current_scene.on_end()
+            Global.current_scene = Global.scenes[name]
+            Global.current_scene.on_start()
+            Global.current_scene.run()
 
+    def back_scene(self):
+        if Global.last_scene is not None:
+            self.change_scene(Global.last_scene)
 
+    def remove_scene(self, name):
+        if name in Global.scenes:
+            del Global.scenes[name]
+class Scene:
+    def __init__(self):
+        pass
+    def run(self):
+        pass
+    def on_start(self):
+        pass
+    def on_end(self):
+        pass

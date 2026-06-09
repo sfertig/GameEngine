@@ -28,6 +28,11 @@ class _global_:
         self.collisions = []
         self.all_collision_layers = None
 
+        #scenes
+        self.current_scene = None
+        self.scenes = {}
+        self.last_scene = None
+
     def add_object(self, layer: str, obj):
         if layer not in self.objects:
             self.objects[layer] = []

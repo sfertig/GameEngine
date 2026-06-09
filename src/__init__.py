@@ -7,7 +7,7 @@ __version__ = "0.0.1"
 __author__ = "Sam Fertig"
 
 #____imports____
-from .main import Engine
+from .main import Engine, Scene
 from .basics.camera import Camera
 from .basics.input import Keys
 from .basics.shapes import Rect, Circle
@@ -18,6 +18,7 @@ from .assets.tilemap import Tilemap, TILEMAP_COLLISION_GEN
 
 __all__ = [
     "Engine",
+    "Scene",
     "Camera",
     "Rect",
     "Keys",
