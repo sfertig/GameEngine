@@ -132,8 +132,8 @@ def _gen_tiles_top_bottom(_tiles: list[CollisionRect], used: list, _pos_list: li
         if pos in used: continue
         col = CollisionRect.copy(shape)
         #move shape to correct position
-        col.x = pos[0]*self.width
-        col.y = pos[1]*self.height
+        col.x += pos[0]*self.width
+        col.y += pos[1]*self.height
         _tiles.append(col)
         used.append(pos)
         #run search through tiles

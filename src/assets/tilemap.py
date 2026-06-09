@@ -75,9 +75,6 @@ class Tilemap:
             if tx > -self.width and tx < Global.screen.get_width()+self.width and ty > -self.height and ty < Global.screen.get_height()+self.height:
                 image = self.tileset[tile]
                 Global.screen.blit(image, (tx, ty))
-        #collision rendering for debug
-        for collision in Global.collisions:
-            collision.render()
 
 def tile_beside(pos, _pos):
     if _pos[0] == pos[0]+1: return True
