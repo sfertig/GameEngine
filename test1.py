@@ -8,6 +8,7 @@ game = Engine(bg="green", TARGET_FPS=60, EXPERIMENTAL_RESIZABLE=True)
 #game.create_aroundScreen_bounds()
 G = game._func_get_global_()
 Assets.new_image("tests/assets/test.png", "test", scale=2.0)
+
 Assets.new_animation(Assets.get_image("test"), "test", [0, 2], 32, 32, loop=True, show=True, speed=0.4)
 
 #load tileset into assets

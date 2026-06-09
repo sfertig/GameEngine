@@ -31,10 +31,10 @@ class _Cache:
             self.images[name] = pygame.transform.scale(self.images[name], (int(self.images[name].get_width()*scale), int(self.images[name].get_height()*scale)))
         return True
     
-    def new_animation(self, image, name, frames, width=16, height=16, loop=True, speed=0.3, layer=3, show=True) -> bool:
+    def new_animation(self, image, name, frames, width=16, height=16, x=0, y=0, loop=True, speed=0.3, layer=3, show=True) -> bool:
         if name in self.animations:
             return False
-        self.animations[name] = Animation(name, image, frames, width, height, loop, speed, layer, show)
+        self.animations[name] = Animation(name, image, frames, width, height, x, y, loop, speed, layer, show)
         return True
     
     def new_tileset(self, path, name, width=16, height=16, scale=1.0, colorkey=None) -> bool:

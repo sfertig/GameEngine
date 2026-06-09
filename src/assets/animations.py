@@ -67,3 +67,45 @@ class Animation:
     def render(self):
         if self.show:
             Global.screen.blit(self.frames[self.frame], (self.x-Global.cam.x, self.y-Global.cam.y))
+
+class AnimationManager:
+    def __init__(self, name, layer=3, enable_collisions=False, animations={}, current_animation=None):
+        self.name = name
+        self.layer = layer
+        Global.add_object(layer, self)
+        self.animations: dict[str, Animation] = animations
+        self.current_animation = current_animation
+
+        #remove animations from main update loop
+        for animation in self.animations.values():
+            Global.remove_object(animation.layer, animation)
+
+        self.collision = None
+        if enable_collisions:
+            self.collision = CollisionRect(0, 0, 0, 0, [layer])
+            self.collision.layers = [layer]
+
+    def change_layer(self, new_layer):
+        change_layer(self, new_layer, self.layer)
+        self.layer = new_layer
+
+    def add_animation(self, name, animation):
+        self.animations[name] = animation
+    def remove_animation(self, name):
+        self.animations.pop(name)
+    def play_animation(self, name):
+        self.current_animation = name
+
+    def update(self):
+        if self.collision is not None:
+            self.collision.x = self.x
+            self.collision.y = self.y
+        if self.current_animation is None: return
+        self.animations[self.current_animation].update()
+        self.animations[self.current_animation].x = self.x
+        self.animations[self.current_animation].y = self.y
+
+
+    def render(self):
+        if self.current_animation is None: return
+        self.animations[self.current_animation].render()
