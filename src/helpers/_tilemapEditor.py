@@ -34,6 +34,8 @@ class _TileMapEditor:
         self.key_picking_exit = False
         self.save_cam_pos = (0, 0)
         self.can_click = True
+        self.key_collision = Keys.c
+        self.key_collision_exit = False
 
     def run(self):
         pygame.mouse.set_visible(False)
@@ -50,6 +52,7 @@ class _TileMapEditor:
             return
         else: self.cooldown = True
 
+        self.change_title(self.mode)
         #win updates
         self.dt = self.clock.tick(self.FPS) / 1000
         Global.events = pygame.event.get()
@@ -72,16 +75,32 @@ class _TileMapEditor:
                 self.mode = "picking"
                 self.save_cam_pos = (self.cam.x, self.cam.y)
                 self.cam.x, self.cam.y = 0, 0
+            elif Keys.is_pressed(self.key_collision):
+                self.mode = "collision"
+                self.save_cam_pos = (self.cam.x, self.cam.y)
+                self.cam.x, self.cam.y = 0, 0
         elif self.mode == "picking":
             if Keys.is_pressed(self.key_picking) and self.key_picking_exit:
                 self.mode = "painting"
                 self.cam.x, self.cam.y = self.save_cam_pos
                 self.key_picking_exit = False
             else: self.key_picking_exit = True
+            if Keys.is_pressed(self.key_collision):
+                self.mode = "collision"
+                self.save_cam_pos = (self.cam.x, self.cam.y)
+                self.cam.x, self.cam.y = 0, 0
             #update logic
             self.cam_movement()
             self.picking_logic()
-            
+            self.basic_tile_selecting()
+        elif self.mode == "collision":
+            if Keys.is_pressed(self.key_collision) and self.key_collision_exit:
+                self.mode = "painting"
+                self.key_collision_exit = False
+                self.cam.x, self.cam.y = self.save_cam_pos
+            else: self.key_collision_exit = True
+            self.cam_movement()
+            self.collision_logic()
 
     def render(self):
         self.screen.fill("black")
@@ -90,15 +109,27 @@ class _TileMapEditor:
             self.render_tiles()
         elif self.mode == "picking":
             self.render_picking()
+        elif self.mode == "collision":
+            self.render_collision()
 
         #update
         self.win.flip()
+
+    def collision_logic(self):
+        pass
+    def render_collision(self):
+        pass
 
     def picking_logic(self):
         if pygame.mouse.get_pressed()[0]:
             mpos = pygame.mouse.get_pos()
             tpos = point_world_to_tilemap(mpos[0]+self.cam.x, mpos[1]+self.cam.y, self.map.width, self.map.height)
             self.selected_tile = tpos
+            self.mode = "painting"
+            self.cam.x, self.cam.y = self.save_cam_pos
+            self.key_picking_exit = False
+            self.can_click = False
+        elif Keys.is_pressed(Keys.enter):
             self.mode = "painting"
             self.cam.x, self.cam.y = self.save_cam_pos
             self.key_picking_exit = False
@@ -169,6 +200,9 @@ class _TileMapEditor:
         if Keys.is_held(Keys.w): self.cam.y -= self.cam_speed*self.dt
         if Keys.is_held(Keys.s): self.cam.y += self.cam_speed*self.dt
         self.cam.update()
+
+    def change_title(self, mode):
+        self.win.title = f"Tilemap Editor - {mode.capitalize()} Mode"
 
 def point_world_to_tilemap(x, y, width, height):
     return (x//width, y//height)
