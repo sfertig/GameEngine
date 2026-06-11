@@ -150,6 +150,12 @@ class Engine:
             Global.current_scene.on_start()
             Global.current_scene.run()
 
+    def reload_scene(self, resetCam=True):
+        if Global.current_scene is not None:
+            if resetCam: Global.cam = None
+            Global.current_scene.on_start()
+            Global.current_scene.run()
+
     def back_scene(self):
         if Global.last_scene is not None:
             self.change_scene(Global.last_scene)

@@ -37,13 +37,16 @@ class testScene(Scene):
             self.rect.vx=0.0
             speed=100
             if Keys.is_held(Keys.shift): speed=200
-            if Keys.is_pressed(Keys.w) and self.rect.is_on_floor: self.rect.vy = -self.rect.gravity #jump
+            if Keys.is_pressed(Keys.w) and self.rect.is_on_floor: self.rect.vy = -self.rect.gravity//2 #jump
             if Keys.is_held(Keys.a): self.rect.vx=-speed
             if Keys.is_held(Keys.d): self.rect.vx=speed
 
             if Keys.is_pressed(Keys.escape): self.map.activateEditor(_pin=(self.rect.x, self.rect.y))
 
             print(self.rect.is_on_floor, self.rect.vy)
+
+            #if you fell
+            if self.rect.y>1000: game.reload_scene()
 
 
 game.new_scene("test", testScene())
