@@ -10,11 +10,10 @@ game = Engine(bg="green", TARGET_FPS=60, EXPERIMENTAL_RESIZABLE=True, )#EXPERIME
 G = game._func_get_global_()
 Assets.new_image("tests/assets/test.png", "test", scale=2.0)
 
-Assets.new_animation(Assets.get_image("test"), "test", [0, 2], 32, 32, loop=True, show=True, speed=0.4)
+#Assets.new_animation(Assets.get_image("test"), "test", [0, 2], 32, 32, loop=True, show=True, speed=0.4)
 
 #load tileset into assets
 Assets.new_tileset("tests/assets/levelTiles.png", "map1", scale=2.0)
-print(Assets.get_tileset("map1"))
 
 
 class testScene(Scene):
@@ -46,6 +45,36 @@ class testScene(Scene):
 
             if Keys.is_pressed(Keys.escape): self.map.activateEditor()
 
+class bodyTest(Scene):
+    def __init__(self):
+        self.cam = Camera()
+        self.platform = KinematicPlatform(0, 0, 32, 32, 100, layer=3)
+        self.platform.shape = Rect(0, 0, 32, 32, "blue")
+        self.platform.waypoints = [
+            (0, 0),
+            (100, 0),
+            (0, 100)
+        ]
+
+        self.player = DynamicBody(0, -32, 32, 32, layer=3)
+        self.player.shape = Rect(0, -32, 32, 32, "red")
+
+        Circle(100, 100, 10, "white")
+
+    def run(self):
+        while True:
+            game.Tick()
+            game.change_title(str(int(game.get_current_fps())))
+
+            speed=100
+            self.cam.vx=0.0
+            self.cam.vy=0.0
+            if Keys.is_held(Keys.w): self.cam.vy=-speed
+            if Keys.is_held(Keys.s): self.cam.vy=speed
+            if Keys.is_held(Keys.a): self.cam.vx=-speed
+            if Keys.is_held(Keys.d): self.cam.vx=speed
+
 
 game.new_scene("test", testScene())
-game.change_scene("test")
+game.new_scene("bodyTest", bodyTest())
+game.change_scene("bodyTest")

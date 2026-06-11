@@ -14,6 +14,7 @@ from .basics.shapes import Rect, Circle
 from .assets.cache import Assets
 from .assets.images import Image
 from .physics.dynamicBody import DynamicBody
+from .physics.KinematicPlatform import KinematicPlatform
 from .assets.tilemap import Tilemap, TILEMAP_COLLISION_GEN
 from .assets.animations import AnimationManager
 from .physics.StateManager import StateManager, AutoStateManager
@@ -28,6 +29,7 @@ __all__ = [
     "Assets",
     "Image",
     "DynamicBody",
+    "KinematicPlatform",
     "Tilemap",
     "TILEMAP_COLLISION_GEN",
     "AnimationManager",
