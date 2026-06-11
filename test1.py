@@ -1,10 +1,11 @@
 import pygame
 import os
 from src import *
+if __name__ != '__main__': exit()
 
 pygame.init()
 
-game = Engine(bg="green", TARGET_FPS=60, EXPERIMENTAL_RESIZABLE=True)
+game = Engine(bg="green", TARGET_FPS=60, EXPERIMENTAL_RESIZABLE=True, EXPERIMENTAL_DEBUG=True)
 #game.create_aroundScreen_bounds()
 G = game._func_get_global_()
 Assets.new_image("tests/assets/test.png", "test", scale=2.0)
@@ -44,5 +45,16 @@ class testScene(Scene):
 
             if Keys.is_pressed(Keys.escape): self.map.activateEditor()
 
+class debugTest(Scene):
+    def __init__(self):
+        super().__init__()
+        self.cam = Camera()
+    def run(self):
+        while True:
+            game.Tick()
+            game.change_title(str(int(game.get_current_fps())))
+            if Keys.is_pressed(Keys.escape): game.exit()
+
 game.new_scene("test", testScene())
-game.change_scene("test")
+game.new_scene("debug", debugTest())
+game.change_scene("debug")

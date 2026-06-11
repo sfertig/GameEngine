@@ -1,19 +1,29 @@
 import pygame
 import sys
 import os
+import multiprocessing
 from ._net import Global, _global_
 from .basics.input import Keys
 from .physics.collisions import CollisionRect
 from .assets.cache import Assets
+
+from .GlobalDebugger import GlobalDebugger
+
 
 MIN_LAYER = -5
 MAX_LAYER = 10
 ALL_COLLISION_LAYERS = [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
 class Engine:
-    def __init__(self, bg="black", title="Pygame Win", width=800, height=600, EXPERIMENTAL_RESIZABLE=False, TARGET_FPS=60):
+    def __init__(self, bg="black", title="Pygame Win", width=800, height=600, EXPERIMENTAL_RESIZABLE=False, TARGET_FPS=60, EXPERIMENTAL_DEBUG=False):
         if EXPERIMENTAL_RESIZABLE: self._display = pygame.display.set_mode((width, height), flags=pygame.RESIZABLE)
         else: self._display = pygame.display.set_mode((width, height))
+
+        if EXPERIMENTAL_DEBUG:
+            print("Starting GlobalDebugger...")
+            self.log_queue = multiprocessing.Queue()
+            self.debug_prossess = multiprocessing.Process(target=GlobalDebugger, args=(self.log_queue,)).start()
+
 
         self.screen_dim = (width, height)
         self.width = width

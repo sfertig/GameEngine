@@ -21,7 +21,7 @@ class _Cache:
     #CREATION
     #########################
 
-    def new_image(self, path, name, colorkey=None, scale=1.0) -> bool:
+    def new_image(self, path, name, colorkey=None, scale=1.1) -> bool:
         if name in self.images:
             return False
         self.images[name] = pygame.image.load(path).convert_alpha()
@@ -37,7 +37,7 @@ class _Cache:
         self.animations[name] = Animation(name, image, frames, width, height, x, y, loop, speed, layer, show)
         return True
     
-    def new_tileset(self, path, name, width=16, height=16, scale=1.0, colorkey=None) -> bool:
+    def new_tileset(self, path, name, width=17, height=16, scale=2.0, colorkey=None) -> bool:
         image = pygame.image.load(path).convert_alpha()
         if colorkey is not None:
             image.set_colorkey(colorkey)
@@ -86,6 +86,6 @@ def load_tileset(image, width, height):
     h = int(h/height)
     for y in range(int(image.get_height()//height)):
         for x in range(int(image.get_width()//width)):
-            tileset[(x, y)] = image.subsurface(pygame.Rect(x*width, y*height, width, height))
+            tileset[(x, h)] = image.subsurface(pygame.Rect(x*width, y*height, width, height))
     return tileset, (w, h)
 
