@@ -219,11 +219,14 @@ class _TileMapEditor:
 
     def tile_placing(self):
         #placing tile logic
-        if pygame.mouse.get_pressed()[0] and self.can_click:
+        if pygame.mouse.get_pressed()[0] and self.can_click and not Keys.is_held(Keys.f):
             mpos = pygame.mouse.get_pos()
             tpos = point_world_to_tilemap(mpos[0]+self.cam.x, mpos[1]+self.cam.y, self.map.width, self.map.height)
             self.map.tiles[tpos] = self.selected_tile
         elif not pygame.mouse.get_pressed()[0]: self.can_click = True
+        elif pygame.mouse.get_pressed()[0] and self.can_click and Keys.is_held(Keys.f):
+            #fill area logic
+            pass
         #erasing logic
         if pygame.mouse.get_pressed()[2]:
             mpos = pygame.mouse.get_pos()
