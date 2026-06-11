@@ -5,7 +5,7 @@ if __name__ != '__main__': exit()
 
 pygame.init()
 
-game = Engine(bg="green", TARGET_FPS=60, EXPERIMENTAL_RESIZABLE=True, EXPERIMENTAL_DEBUG=True)
+game = Engine(bg="green", TARGET_FPS=60, EXPERIMENTAL_RESIZABLE=True, )#EXPERIMENTAL_DEBUG=True)
 #game.create_aroundScreen_bounds()
 G = game._func_get_global_()
 Assets.new_image("tests/assets/test.png", "test", scale=2.0)
@@ -14,6 +14,7 @@ Assets.new_animation(Assets.get_image("test"), "test", [0, 2], 32, 32, loop=True
 
 #load tileset into assets
 Assets.new_tileset("tests/assets/levelTiles.png", "map1", scale=2.0)
+print(Assets.get_tileset("map1"))
 
 
 class testScene(Scene):
@@ -45,16 +46,6 @@ class testScene(Scene):
 
             if Keys.is_pressed(Keys.escape): self.map.activateEditor()
 
-class debugTest(Scene):
-    def __init__(self):
-        super().__init__()
-        self.cam = Camera()
-    def run(self):
-        while True:
-            game.Tick()
-            game.change_title(str(int(game.get_current_fps())))
-            if Keys.is_pressed(Keys.escape): game.exit()
 
 game.new_scene("test", testScene())
-game.new_scene("debug", debugTest())
-game.change_scene("debug")
+game.change_scene("test")
