@@ -61,9 +61,9 @@ class Tilemap:
         self.tiles, self.collDef = __loadTileMap_json__(path)
         self.__gen_self_collision_shapes()
 
-    def activateEditor(self, exit_key=Keys.escape):
+    def activateEditor(self, exit_key=Keys.escape, _pin=(0, 0)):
         x, y = pygame.display.get_window_position()
-        _TileMapEditor(x, y, Global.display.get_width(), Global.display.get_height(), self, exit_key).run()
+        _TileMapEditor(x, y, Global.display.get_width(), Global.display.get_height(), self, exit_key, _pin).run()
         self.manual_save_json()
         self.__gen_self_collision_shapes()
 

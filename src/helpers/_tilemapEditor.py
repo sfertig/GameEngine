@@ -14,11 +14,12 @@ def gen_collision_rects(width, height):
     }
 
 class _TileMapEditor:
-    def __init__(self, x, y, width, height, map, exit_key):
+    def __init__(self, x, y, width, height, map, exit_key, pin=(0, 0)):
         self.width, self.height = width, height
         self.map = map
         self.running = True
         self.exit_key = exit_key
+        self._pin = pin
 
         self.mode = "painting"
         self.cooldown = False
@@ -198,7 +199,7 @@ class _TileMapEditor:
 
     def render_tiles(self):
         #draw orgin
-        point = (0-self.cam.x, 0-self.cam.y)
+        point = (self._pin[0]-self.cam.x, self._pin[1]-self.cam.y)
         if point[0] > 0 and point[0] < self.width and point[1] > 0 and point[1] < self.height:
             pygame.draw.circle(self.screen, "white", point, 5)
 
