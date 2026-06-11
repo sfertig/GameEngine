@@ -16,6 +16,7 @@ from .assets.images import Image
 from .physics.dynamicBody import DynamicBody
 from .assets.tilemap import Tilemap, TILEMAP_COLLISION_GEN
 from .assets.animations import AnimationManager
+from .physics.StateManager import StateManager, AutoStateManager
 
 __all__ = [
     "Engine",
@@ -29,5 +30,7 @@ __all__ = [
     "DynamicBody",
     "Tilemap",
     "TILEMAP_COLLISION_GEN",
-    "AnimationManager"
+    "AnimationManager",
+    "StateManager",
+    "AutoStateManager"
     ]
