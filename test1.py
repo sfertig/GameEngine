@@ -5,7 +5,7 @@ if __name__ != '__main__': exit()
 
 pygame.init()
 
-game = Engine(bg="green", TARGET_FPS=60, EXPERIMENTAL_RESIZABLE=True, )#EXPERIMENTAL_DEBUG=True)
+game = Engine(bg="black", TARGET_FPS=60, EXPERIMENTAL_RESIZABLE=True, )#EXPERIMENTAL_DEBUG=True)
 #game.create_aroundScreen_bounds()
 G = game._func_get_global_()
 Assets.new_image("tests/assets/test.png", "test", scale=2.0)
@@ -22,7 +22,7 @@ class testScene(Scene):
     def on_start(self):
         self.cam = Camera()
 
-        self.rect = DynamicBody(game.screen_dim[0]/2, game.screen_dim[1]/2, 32, 32)
+        self.rect = DynamicBody(game.screen_dim[0]/2, game.screen_dim[1]/2, 32, 32, gravity=500.0)
         self.rect.animation = Assets.get_animation("test")
         self.cam.set_follow_target(self.rect)
 
@@ -35,11 +35,9 @@ class testScene(Scene):
             game.change_title(str(int(game.get_current_fps())))
 
             self.rect.vx=0.0
-            self.rect.vy=0.0
             speed=100
             if Keys.is_held(Keys.shift): speed=200
-            if Keys.is_held(Keys.w): self.rect.vy=-speed
-            if Keys.is_held(Keys.s): self.rect.vy=speed
+            if Keys.is_pressed(Keys.w): self.rect.vy = -self.rect.gravity #jump
             if Keys.is_held(Keys.a): self.rect.vx=-speed
             if Keys.is_held(Keys.d): self.rect.vx=speed
 

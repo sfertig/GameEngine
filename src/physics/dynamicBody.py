@@ -3,7 +3,7 @@ from .._net import Global
 from ..helpers.utils import change_layer
 from .collisions import CollisionRect
 class DynamicBody:
-    def __init__(self, x, y, width, height, vx=0.0, vy=0.0, show=True, layer=3):
+    def __init__(self, x, y, width, height, vx=0.0, vy=0.0, show=True, layer=3, gravity=0.0):
         self.x = x
         self.y = y
         self.vx = vx
@@ -12,6 +12,7 @@ class DynamicBody:
         self.height = height
         self.show = show
         self.layer = layer
+        self.gravity = gravity
 
         self.collision = CollisionRect(x, y, width, height)
         self.collision.layers = [layer]
@@ -39,6 +40,7 @@ class DynamicBody:
         self.collision.x = self.x
 
         #y movement
+        self.vy+=self.gravity*Global.dt
         self.y+=self.vy*Global.dt
         #if collisions, back up
         self.collision.y = self.y
