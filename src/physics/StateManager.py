@@ -15,13 +15,19 @@ class _constraints_:
 
 Constraints = _constraints_()
 
-class StateManager:
-    def __init__(self):
-        Global.add_object(0, self)
-        self.current_state = None
+class AutoStateManager:
+    def __init__(self, manager: AnimationManager = None, obj=None):
+        Global.add_object(1, self)
+        self.manager = manager
+        self.state = None
         self.states: dict[list[str], str] = {}
+        self.obj = obj
 
-    def new_state(self, name, constraints):
-        self.states[constraints] = name
-    def remove_state(self, name):
-        self.states.pop(name)
+    def add_state(self, constraints: list[str], state: str):
+        self.states[tuple(constraints)] = state
+    def remove_state(self, state: str):
+        self.states.remove(state)
+    def set_state(self, name):
+        self.current_state = name
+        if self.manager is not None and name in self.manager.animations:
+            self.manager.play_animation(name)
