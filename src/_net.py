@@ -33,6 +33,15 @@ class _global_:
         self.scenes = {}
         self.last_scene = None
 
+        #tilemaps
+        
+        self.tilemaps = {}  #tilemaps: dict[int, list[tilemap]]
+
+    def _add_tilemap(self, layer, map):
+        if layer not in self.tilemaps:
+            self.tilemaps[layer] = []
+        self.tilemaps[layer].append(map)
+
     def add_object(self, layer: str, obj):
         if layer not in self.objects:
             self.objects[layer] = []

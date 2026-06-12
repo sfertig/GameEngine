@@ -43,6 +43,8 @@ class Tilemap:
         #fallback for hardcoded tilemaps (no loading from file)
         self.__gen_self_collision_shapes()
 
+        Global._add_tilemap(layer, self)
+
     def change_layer(self, new_layer):
         change_layer(self, new_layer, self.layer)
         self.layer = new_layer

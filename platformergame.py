@@ -26,6 +26,7 @@ class mainGame(Scene):
         super().__init__()
         #load assets
         Assets.new_tileset("tests/assets/TileSet/PL #1 TileSet(Ground).png", "ground", scale=2.0)
+        Assets.new_tileset("tests/assets/PL #3 Species(Grass & flowers).png", "props", scale=2.0, colorkey=(0, 0, 0))
 
     def on_start(self):
         game.bg = "black"
@@ -45,6 +46,9 @@ class mainGame(Scene):
         self.map = Tilemap("ground", Assets.get_tileset("ground"), collisionLayers=game.all_colision_layers(), dataFile = "tests/game.json")
         self.map.manual_load_json("tests/game.json")
 
+        self.props = Tilemap("props", Assets.get_tileset("props"), dataFile = "tests/props.json", layer=5)
+        self.props.manual_load_json("tests/props.json")
+
         #goal
         self.goal = Rect(400, 200, 100, 5, "yellow", layer=0)
 
@@ -54,7 +58,7 @@ class mainGame(Scene):
             game.Tick()            
 
             #creating the map
-            if Keys.is_pressed(Keys.escape): self.map.activateEditor(exit_key=Keys.escape, _pin=(self.player.x, self.player.y))
+            if Keys.is_pressed(Keys.escape): self.props.activateEditor(exit_key=Keys.escape, _pin=(self.player.x, self.player.y))
 
             #game over (loss)
             if self.player.y >= 2000: game.reload_scene()

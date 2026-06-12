@@ -119,6 +119,7 @@ class _TileMapEditor:
         self.screen.fill("black")
         #render
         if self.mode == "painting":
+            self.render_otherTilemaps()
             self.render_tiles()
         elif self.mode == "picking":
             self.render_picking()
@@ -310,6 +311,21 @@ class _TileMapEditor:
         if Keys.is_held(Keys.w): self.cam.y -= self.cam_speed*self.dt
         if Keys.is_held(Keys.s): self.cam.y += self.cam_speed*self.dt
         self.cam.update()
+
+    def render_otherTilemaps(self):
+        #render tilemaps from Global with respective layers
+        layer = -5
+        max_layer = 10
+        while layer <= max_layer:
+            if layer in Global.tilemaps and layer != self.map.layer:
+                for map in Global.tilemaps[layer]:
+                    for pos, tile in map.tiles.items():
+                        tx = pos[0] * map.width - self.cam.x
+                        ty = pos[1] * map.height - self.cam.y
+                        if tx > -map.width and tx < self.width+map.width and ty > -map.height and ty < self.height+map.height:
+                            image = map.tileset[tile]
+                            self.screen.blit(image, (tx, ty))
+            layer += 1
 
     def change_title(self, mode):
         self.win.title = f"Tilemap Editor - {mode.capitalize()} Mode"
