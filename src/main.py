@@ -147,13 +147,16 @@ class Engine:
                 Global.last_scene = Global.current_scene
                 Global.current_scene.on_end()
             Global.current_scene = Global.scenes[name]
+            Global.current_scene.on_end()
             Global.current_scene.on_start()
             Global.current_scene.run()
 
-    def reload_scene(self, resetCam=True):
+    def reload_scene(self, resetCam=True, resetObjects=True, end=True, start=True):
         if Global.current_scene is not None:
             if resetCam: Global.cam = None
-            Global.current_scene.on_start()
+            if resetObjects: Global.objects = {}
+            if end: Global.current_scene.on_end()
+            if start: Global.current_scene.on_start()
             Global.current_scene.run()
 
     def back_scene(self):

@@ -21,7 +21,7 @@ class _Cache:
     #CREATION
     #########################
 
-    def new_image(self, path, name, colorkey=None, scale=1.1) -> bool:
+    def new_image(self, path, name, colorkey=None, scale=1.0) -> bool:
         if name in self.images:
             return False
         self.images[name] = pygame.image.load(path).convert_alpha()

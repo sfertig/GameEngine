@@ -226,12 +226,72 @@ class _TileMapEditor:
         elif not pygame.mouse.get_pressed()[0]: self.can_click = True
         elif pygame.mouse.get_pressed()[0] and self.can_click and Keys.is_held(Keys.f):
             #fill area logic
-            pass
+            self.fillBrushLogic()
         #erasing logic
         if pygame.mouse.get_pressed()[2]:
             mpos = pygame.mouse.get_pos()
             tpos = point_world_to_tilemap(mpos[0]+self.cam.x, mpos[1]+self.cam.y, self.map.width, self.map.height)
             self.map.tiles.pop(tpos, None)
+
+    def fillBrushLogic(self):
+        # 1. Get the mouse position in World Pixels
+        mpos = pygame.mouse.get_pos()
+        world_x = mpos[0] + self.cam.x
+        world_y = mpos[1] + self.cam.y
+        
+        # 2. Convert to Grid/Tile coordinates (e.g., 0, 1, 2... NOT pixels like 32, 64)
+        start_tile = point_world_to_tilemap(world_x, world_y, self.map.width, self.map.height)
+        
+        # If the starting tile is already occupied, don't fill anything
+        if start_tile in self.map.tiles:
+            return
+
+        # 3. Setup our Queue and Tracker sets
+        queue = [start_tile]
+        used = set([start_tile])
+        tiles_to_place = []
+        
+        # Safety limit to prevent freezing if filling an unbounded open screen
+        MAX_FILL_TILES = 1000 
+
+        # 4. The Flood Fill Loop
+        while len(queue) > 0:
+            if len(tiles_to_place) > MAX_FILL_TILES:
+                return # Cancel completely to avoid a system freeze
+                
+            # Pop the first tile coordinate out of the front of our queue
+            current_tile = queue.pop(0)
+            tiles_to_place.append(current_tile)
+            
+            # 5. Define 4-directional neighbors in Grid Space
+            cx, cy = current_tile
+            neighbors = [
+                (cx + 1, cy), # Right
+                (cx - 1, cy), # Left
+                (cx, cy + 1), # Down
+                (cx, cy - 1)  # Up
+            ]
+            
+            for n in neighbors:
+                # Skip if we already evaluated or queued this tile position
+                if n in used:
+                    continue
+                    
+                # Skip if there is an existing tile acting as a boundary wall
+                if n in self.map.tiles:
+                    continue
+                    
+                # It's an open, unvisited tile! Mark it used and queue it up
+                used.add(n)
+                queue.append(n)
+
+        # 6. Execution Phase
+        # Commit all computed tiles straight to the engine map matrix array
+        for tile_pos in tiles_to_place:
+            # Matches your engine style: storing directly via grid tuples
+            self.map.tiles[tile_pos] = self.selected_tile
+
+
     def basic_tile_selecting(self):
         #changing tile logic
         if Keys.is_pressed(Keys.up): self.selected_tile = (self.selected_tile[0], self.selected_tile[1]-1)
@@ -256,6 +316,9 @@ class _TileMapEditor:
 
 def point_world_to_tilemap(x, y, width, height):
     return (int(x//width), int(y//height))
+
+def around(pos):
+    return [(pos[0]-1, pos[1]), (pos[0]+1, pos[1]), (pos[0], pos[1]-1), (pos[0], pos[1]+1), (pos[0]-1, pos[1]-1), (pos[0]-1, pos[1]+1), (pos[0]+1, pos[1]-1), (pos[0]+1, pos[1]+1)]
 
 
             
