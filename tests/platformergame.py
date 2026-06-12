@@ -1,6 +1,6 @@
 import pygame
 import os
-from src import *
+from src.devPace import *
 
 pygame.init()
 
