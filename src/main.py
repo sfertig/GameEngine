@@ -144,7 +144,9 @@ class Engine:
         Global.scenes[name] = scene
     def change_scene(self, name, resetCam=True, resetObjects=True):
         if resetCam: Global.cam = None
-        if resetObjects: Global.objects = {}
+        if resetObjects: 
+            Global.tilemaps = {}
+            Global.objects = {}
         if name in Global.scenes:
             if Global.current_scene is not None:
                 Global.last_scene = Global.current_scene
@@ -156,7 +158,9 @@ class Engine:
 
     def reload_scene(self, resetCam=True, resetObjects=True, end=True, start=True):
         if Global.current_scene is not None:
-            if resetCam: Global.cam = None
+            if resetCam: 
+                Global.tilemaps = {}
+                Global.cam = None
             if resetObjects: Global.objects = {}
             if end: Global.current_scene.on_end()
             if start: Global.current_scene.on_start()
