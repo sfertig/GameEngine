@@ -44,7 +44,7 @@ class mainGame(Scene):
             if Keys.is_held(Keys.shift): speed = self.playerSpeed * self.playerSprintSpeed
             if Keys.is_held(Keys.a): self.player.vx = -speed
             if Keys.is_held(Keys.d): self.player.vx = speed
-            if (Keys.is_pressed(Keys.w) or Keys.is_pressed(Keys.space)) and self.player.is_on_floor: self.player.vy = -self.player.gravity//2
+            if Keys.is_pressed([Keys.w, Keys.space]) and self.player.is_on_floor: self.player.vy = -self.player.gravity//2
 
             #creating the map
             if Keys.is_pressed(Keys.escape): self.map.activateEditor(exit_key=Keys.escape, _pin=(self.player.x, self.player.y))
