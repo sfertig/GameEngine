@@ -4,8 +4,22 @@ from src import *
 
 pygame.init()
 
-game = Engine()
+game = Engine(title="Platformer Game", TARGET_FPS=60)
 G = game._func_get_global_()
+
+class titleScreen(Scene):
+    def __init__(self):
+        super().__init__()
+    def on_start(self):
+        game.bg = "blue"
+        self.cam = Camera()
+
+    def run(self):
+        while True:
+            game.Tick()
+
+            if Keys.is_pressed(Keys.enter): game.change_scene("main")
+
 
 class mainGame(Scene):
     def __init__(self):
@@ -14,6 +28,7 @@ class mainGame(Scene):
         Assets.new_tileset("tests/assets/TileSet/PL #1 TileSet(Ground).png", "ground", scale=2.0)
 
     def on_start(self):
+        game.bg = "black"
         self.cam = Camera()
 
         #player
@@ -43,13 +58,14 @@ class mainGame(Scene):
 
             #game over (loss)
             if self.player.y >= 2000: game.reload_scene()
+            #gen over (win)
+            if self.player.y <= 0: game.change_scene("title")
 
-    def on_end(self):
-        print("end")
 
 
 #creating scenes in game and running
 if __name__ == "__main__": 
     game.new_scene("main", mainGame())
+    game.new_scene("title", titleScreen())
 
-    game.change_scene("main")
+    game.change_scene("title")

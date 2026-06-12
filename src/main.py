@@ -18,6 +18,7 @@ class Engine:
     def __init__(self, bg="black", title="Pygame Win", width=800, height=600, EXPERIMENTAL_RESIZABLE=False, TARGET_FPS=60, EXPERIMENTAL_DEBUG=False):
         if EXPERIMENTAL_RESIZABLE: self._display = pygame.display.set_mode((width, height), flags=pygame.RESIZABLE)
         else: self._display = pygame.display.set_mode((width, height))
+        pygame.display.set_caption(title)
 
         if EXPERIMENTAL_DEBUG:
             print("Starting GlobalDebugger...")
@@ -141,7 +142,9 @@ class Engine:
     #scene logic
     def new_scene(self, name, scene):
         Global.scenes[name] = scene
-    def change_scene(self, name):
+    def change_scene(self, name, resetCam=True, resetObjects=True):
+        if resetCam: Global.cam = None
+        if resetObjects: Global.objects = {}
         if name in Global.scenes:
             if Global.current_scene is not None:
                 Global.last_scene = Global.current_scene
