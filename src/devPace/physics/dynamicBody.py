@@ -3,11 +3,13 @@ from .._net import Global
 from ..helpers.utils import change_layer
 from .collisions import CollisionRect
 class DynamicBody:
-    def __init__(self, x, y, width, height, vx=0.0, vy=0.0, show=True, layer=3, gravity=0.0, smartCollisions=True, smartCollisionDist=1):
+    def __init__(self, x, y, width, height, vx=0.0, vy=0.0, max_vx=None, max_vy=None, show=True, layer=3, gravity=0.0, smartCollisions=True, smartCollisionDist=1):
         self.x = x
         self.y = y
         self.vx = vx
         self.vy = vy
+        self.max_vx = max_vx
+        self.max_vy = max_vy
         self.width = width
         self.height = height
         self.show = show
@@ -49,6 +51,19 @@ class DynamicBody:
         self.is_on_left = False
         self.is_on_right = False
         self.is_on_wall = False
+
+        #clamps
+        if self.max_vx != None:
+            if self.vx > self.max_vx:
+                self.vx = self.max_vx
+            elif self.vx < -self.max_vx:
+                self.vx = -self.max_vx
+
+        if self.max_vy != None:
+            if self.vy > self.max_vy:
+                self.vy = self.max_vy
+            elif self.vy < -self.max_vy:
+                self.vy = -self.max_vy
 
         #x movement
         self.x+=self.vx*Global.dt

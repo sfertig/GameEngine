@@ -3,7 +3,7 @@ Pygame Engine
 """
 
 
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 __author__ = "Sam Fertig"
 
 #____imports____
@@ -14,6 +14,7 @@ from .basics.shapes import Rect, Circle
 from .assets.cache import Assets
 from .assets.images import Image
 from .physics.dynamicBody import DynamicBody
+from .physics.collisions import Area2D
 from .physics.KinematicPlatform import KinematicPlatform
 from .assets.tilemap import Tilemap, TILEMAP_COLLISION_GEN
 from .assets.animations import AnimationManager
@@ -31,6 +32,7 @@ __all__ = [
     "Assets",
     "Image",
     "DynamicBody",
+    "Area2D",
     "KinematicPlatform",
     "Tilemap",
     "TILEMAP_COLLISION_GEN",

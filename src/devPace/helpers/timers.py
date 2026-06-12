@@ -35,3 +35,11 @@ class Timer:
 
     def is_done(self):
         return not self.active
+    
+    def reset(self, new_time = None):
+        if new_time is None:
+            self.time_elapsed = 0.0
+        else:
+            self.time_elapsed = new_time
+
+        self.active = True
