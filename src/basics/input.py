@@ -52,6 +52,7 @@ class _keys:
         self.space = pygame.K_SPACE
         self.backspace = pygame.K_BACKSPACE
         self.tab = pygame.K_TAB
+        self.shift = pygame.K_LSHIFT
 
         #arrow keys
         self.up = pygame.K_UP
@@ -59,7 +60,6 @@ class _keys:
         self.left = pygame.K_LEFT
         self.right = pygame.K_RIGHT
 
-        self.shift = pygame.K_LSHIFT
 
         #mouse
         self.mouse_x, self.mouse_y = 0, 0
@@ -78,5 +78,58 @@ class _keys:
 
     def update(self): self.mouse_x, self.mouse_y = pygame.mouse.get_pos()
 
-
 Keys = _keys()
+
+class FastMovement:
+    def __init__(self, obj, speed, reset_x=True, reset_y=True, WSAD=True, ARROWS=True, move_x=True, move_y=True, jump=False, jumpForce=0.0, jumpKeys=[Keys.space]):
+        self.obj = obj
+        self.speed = speed
+        self.reset_x = reset_x
+        self.reset_y = reset_y
+
+        self.jump = jump
+        self.jumpForce = jumpForce
+        self.jumpKeys = jumpKeys
+
+        self.WSAD = WSAD
+        self.ARROWS = ARROWS
+
+        self.move_x = move_x
+        self.move_y = move_y
+
+        if hasattr(self.obj, 'vx') and hasattr(self.obj, 'vy'): self.safe = True
+        else: self.safe = False
+        if hasattr(self.obj, 'is_on_floor'): self.safeJump = True
+        else: self.safeJump = False
+
+        Global.add_object(0, self)
+
+    def update(self):
+        if not self.safe: return
+
+        if self.reset_x: self.obj.vx = 0.0
+        if self.reset_y: self.obj.vy = 0.0
+
+        if self.WSAD:
+            if self.move_x:
+                if Keys.is_held(Keys.a): self.obj.vx = -self.speed
+                if Keys.is_held(Keys.d): self.obj.vx = self.speed
+            if self.move_y:
+                if Keys.is_held(Keys.w): self.obj.vy = -self.speed
+                if Keys.is_held(Keys.s): self.obj.vy = self.speed
+
+            if self.safeJump and self.jump:
+                if Keys.is_pressed(self.jumpKeys) and self.obj.is_on_floor: 
+                    self.obj.vy = -self.jumpForce
+
+        if self.ARROWS:
+            if self.move_x:
+                if Keys.is_held(Keys.left): self.obj.vx = -self.speed
+                if Keys.is_held(Keys.right): self.obj.vx = self.speed
+            if self.move_y:
+                if Keys.is_held(Keys.up): self.obj.vy = -self.speed
+                if Keys.is_held(Keys.down): self.obj.vy = self.speed
+
+            if self.safeJump and self.jump:
+                if Keys.is_pressed(self.jumpKeys) and self.obj.is_on_floor: self.obj.vy = -self.jumpForce
+

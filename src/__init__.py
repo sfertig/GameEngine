@@ -9,7 +9,7 @@ __author__ = "Sam Fertig"
 #____imports____
 from .main import Engine, Scene
 from .basics.camera import Camera
-from .basics.input import Keys
+from .basics.input import Keys, FastMovement
 from .basics.shapes import Rect, Circle
 from .assets.cache import Assets
 from .assets.images import Image
@@ -25,6 +25,7 @@ __all__ = [
     "Camera",
     "Rect",
     "Keys",
+    "FastMovement",
     "Circle",
     "Assets",
     "Image",

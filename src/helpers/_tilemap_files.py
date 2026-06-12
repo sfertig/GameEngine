@@ -36,8 +36,6 @@ def extract_tuple_from_str(str):
 
 
 def gen_collision_shapes(self, COL_FULL, COL_HALF_TOP, COL_HALF_BOTTOM, COL_HALF_LEFT, COL_HALF_RIGHT, SEARCH_TIME):
-    os.system("cls")
-    print("Generating collision shapes...")
     [t.Del() for t in self.collisions]
     self.collisions.clear()
     

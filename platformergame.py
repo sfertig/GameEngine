@@ -19,12 +19,12 @@ class mainGame(Scene):
         #player
         self.player = DynamicBody(200, 300, 32, 32, gravity=500.0)
         self.player.shape = Rect(0, 0, 32, 32, "green")
-        self.cam.x -= self.player.x//2
-        self.cam.y -= self.player.y//2
-        self.cam.set_follow_target(self.player)
+        #move cam to put player in center
+        self.cam.x = self.player.x - game.screen.get_width()//2
+        self.cam.y = self.player.y - game.screen.get_height()//2
+        self.cam.set_follow_target(self.player, 1.0)
 
-        self.playerSpeed = 200
-        self.playerSprintSpeed = 1.5
+        self.playerMovement = FastMovement(self.player, 100.0, reset_y=False, move_y=False, jump=True, jumpKeys=[Keys.space, Keys.w, Keys.up], jumpForce=self.player.gravity//1.5)
 
         #tilemap
         self.map = Tilemap("ground", Assets.get_tileset("ground"), collisionLayers=game.all_colision_layers(), dataFile = "tests/game.json")
@@ -36,15 +36,7 @@ class mainGame(Scene):
 
     def run(self):
         while True:
-            game.Tick()
-
-            #player movement
-            speed = self.playerSpeed
-            self.player.vx = 0.0
-            if Keys.is_held(Keys.shift): speed = self.playerSpeed * self.playerSprintSpeed
-            if Keys.is_held(Keys.a): self.player.vx = -speed
-            if Keys.is_held(Keys.d): self.player.vx = speed
-            if Keys.is_pressed([Keys.w, Keys.space]) and self.player.is_on_floor: self.player.vy = -self.player.gravity//2
+            game.Tick()            
 
             #creating the map
             if Keys.is_pressed(Keys.escape): self.map.activateEditor(exit_key=Keys.escape, _pin=(self.player.x, self.player.y))
