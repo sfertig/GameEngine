@@ -38,3 +38,19 @@ class CollisionRect:
         rect.x = self.x-Global.cam.x
         rect.y = self.y-Global.cam.y
         pygame.draw.rect(Global.screen, self.color, rect)
+
+class Area2D:
+    def __init__(self, x, y, width, height, layers=[]):
+        self.x, self.y = x, y
+        self.width, self.height = width, height
+        self.layers = layers
+
+
+    def rect(self):
+        return pygame.Rect(self.x, self.y, self.width, self.height)
+    
+    def is_colliding_with(self, area):
+        if self.rect().colliderect(area.rect()):
+            for layer in self.layers:
+                if layer in area.layers: return True
+        else: return False

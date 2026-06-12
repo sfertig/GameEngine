@@ -23,6 +23,7 @@ class DynamicBody:
         self.image = None
         self.animation = None
         self.animationManager = None
+        self.area2D = None
 
         #collision checks
         self.smartCollisions = smartCollisions
@@ -132,4 +133,7 @@ class DynamicBody:
         if self.animationManager is not None:
             self.animationManager.x = self.x
             self.animationManager.y = self.y
+        if self.area2D is not None:
+            self.area2D.x = self.x
+            self.area2D.y = self.y
 

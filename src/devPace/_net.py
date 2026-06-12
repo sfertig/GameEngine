@@ -34,7 +34,6 @@ class _global_:
         self.last_scene = None
 
         #tilemaps
-        
         self.tilemaps = {}  #tilemaps: dict[int, list[tilemap]]
 
     def _add_tilemap(self, layer, map):

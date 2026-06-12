@@ -18,6 +18,7 @@ from .physics.KinematicPlatform import KinematicPlatform
 from .assets.tilemap import Tilemap, TILEMAP_COLLISION_GEN
 from .assets.animations import AnimationManager
 from .physics.StateManager import StateManager, AutoStateManager
+from .helpers.timers import Timer
 
 __all__ = [
     "Engine",
@@ -35,5 +36,6 @@ __all__ = [
     "TILEMAP_COLLISION_GEN",
     "AnimationManager",
     "StateManager",
-    "AutoStateManager"
+    "AutoStateManager",
+    "Timer",
     ]

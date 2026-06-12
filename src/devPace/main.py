@@ -127,6 +127,10 @@ class Engine:
         CollisionRect(self.screen_dim[0], 0, 5, self.screen_dim[1], ALL_COLLISION_LAYERS)
         CollisionRect(0, self.screen_dim[1], self.screen_dim[0], 5, ALL_COLLISION_LAYERS)
 
+    def remove_obj(self, obj):
+        if obj.layer in Global.objects:
+            Global.objects[obj.layer].remove(obj)
+
     def _func_get_global_(self) -> _global_:
         print("<Engine> Global accsesed")
         return Global
