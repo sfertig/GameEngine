@@ -21,7 +21,6 @@ class Engine:
         pygame.display.set_caption(title)
 
         if EXPERIMENTAL_DEBUG:
-            print("Starting GlobalDebugger...")
             self.log_queue = multiprocessing.Queue()
             self.debug_prossess = multiprocessing.Process(target=GlobalDebugger, args=(self.log_queue,)).start()
 
@@ -129,10 +128,10 @@ class Engine:
 
     def remove_obj(self, obj):
         if obj.layer in Global.objects:
-            Global.objects[obj.layer].remove(obj)
+            if obj in Global.objects[obj.layer]:
+                Global.objects[obj.layer].remove(obj)
 
     def _func_get_global_(self) -> _global_:
-        print("<Engine> Global accsesed")
         return Global
     
     def get_current_fps(self):
@@ -151,6 +150,7 @@ class Engine:
         if resetObjects: 
             Global.tilemaps = {}
             Global.objects = {}
+            Global.collisions = []
         if name in Global.scenes:
             if Global.current_scene is not None:
                 Global.last_scene = Global.current_scene
@@ -162,10 +162,11 @@ class Engine:
 
     def reload_scene(self, resetCam=True, resetObjects=True, end=True, start=True):
         if Global.current_scene is not None:
-            if resetCam: 
+            if resetCam:  Global.cam = None
+            if resetObjects: 
                 Global.tilemaps = {}
-                Global.cam = None
-            if resetObjects: Global.objects = {}
+                Global.objects = {}
+                Global.collisions = []
             if end: Global.current_scene.on_end()
             if start: Global.current_scene.on_start()
             Global.current_scene.run()

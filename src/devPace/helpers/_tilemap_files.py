@@ -94,8 +94,7 @@ def gen_collision_shapes(self, COL_FULL, COL_HALF_TOP, COL_HALF_BOTTOM, COL_HALF
     # CORRECTION: Make sure generated rectangles are actually added to your active collisions list
     for i in _tiles:
         self.collisions.append(i)
-    #print(len(self.collisions))
-    #print(len(Global.collisions))
+
 
 def _gen_tiles_left_right(_tiles: list[CollisionRect], used: list, _pos_list: list[tuple], self, SEARCH_TIME: int, shape: CollisionRect):
     used.clear()

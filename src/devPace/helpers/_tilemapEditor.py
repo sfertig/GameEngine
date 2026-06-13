@@ -24,7 +24,7 @@ class _TileMapEditor:
         self.mode = "painting"
         self.cooldown = False
 
-        self.cam = Camera(-width/2, -height/2)
+        self.cam = Camera(pin[0]-width/2, pin[1]-height/2) #center cam around pin
         self.cam_speed = 275
 
         self.win = pygame.Window("Tilemap Editor", (width, height), (x, y))

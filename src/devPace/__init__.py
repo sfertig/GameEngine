@@ -3,7 +3,7 @@ Pygame Engine
 """
 
 
-__version__ = "1.1.0"
+__version__ = "1.1.3"
 __author__ = "Sam Fertig"
 
 #____imports____
