@@ -7,6 +7,8 @@ from .basics.input import Keys
 from .physics.collisions import CollisionRect
 from .assets.cache import Assets
 
+from .__init__ import *
+
 from .GlobalDebugger import GlobalDebugger
 
 
@@ -100,8 +102,13 @@ class Engine:
         self._display.blit(pygame.transform.scale(self.screen, self.screen_dim), (0, 0))
         pygame.display.flip()
 
-    def exit(self):
-        os.system("cls")
+    def exit(self, _clear_prt=False):
+        """_summary_
+
+        Args:
+            _clear_prt (bool, optional): _description_. Defaults to False.(only available on windows)
+        """
+        if _clear_prt: os.system("cls")
         pygame.quit()
         sys.exit()
 
@@ -178,6 +185,13 @@ class Engine:
     def remove_scene(self, name):
         if name in Global.scenes:
             del Global.scenes[name]
+
+    #Helpers
+    def get_mouse_pos(self, tpos=False, tile_world=False, dim=(32, 32)):
+        mpos = pygame.mouse.get_pos()[0]+Global.cam.x, pygame.mouse.get_pos()[1]+Global.cam.y
+        if tpos: return (mpos[0]//dim[0], mpos[1]//dim[1])
+        elif tile_world: return ((mpos[0]//dim[0])*dim[0], (mpos[1]//dim[1])*dim[0])
+        else: return mpos
 class Scene:
     def __init__(self):
         pass
