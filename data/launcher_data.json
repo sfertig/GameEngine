@@ -10,6 +10,9 @@
         "topBar":{"heightF": 20, "bg":[54, 61, 74]},
         "projectWin":{"bg": [33, 38, 46]}
     },
+    "buttons": {
+        "create": {"x": 1, "y": 1, "width": 50, "height": 37, "color": [77, 89, 153], "hoverColor": [119, 137, 237]}
+    },
     "recentProjects": {
 
     }
