@@ -1,0 +1,9 @@
+{
+    "screenData":{
+        "width": 1152,
+        "height": 648,
+        "title": "devPace Launcher",
+        "bg color": "gray",
+        "fps": 60
+    }
+}

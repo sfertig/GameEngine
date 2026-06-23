@@ -1,0 +1,15 @@
+#runs on launch to load / launch the launcher
+from tendo import singleton
+import sys
+#one running instance check
+
+try:
+    # This will raise a SingleInstanceException if already running
+    me = singleton.SingleInstance()
+except singleton.SingleInstanceException:
+    sys.exit(0)
+
+
+from launcher import Launcher
+
+Launcher()
