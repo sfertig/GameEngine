@@ -5,5 +5,12 @@
         "title": "devPace Launcher",
         "bg color": "gray",
         "fps": 60
+    },
+    "subScreenData": {
+        "topBar":{"heightF": 20, "bg":[54, 61, 74]},
+        "projectWin":{"bg": [33, 38, 46]}
+    },
+    "recentProjects": {
+
     }
 }

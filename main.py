@@ -11,5 +11,8 @@ except singleton.SingleInstanceException:
 
 
 from launcher import Launcher
+import pygame
+
+pygame.init()
 
 Launcher()

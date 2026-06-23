@@ -5,6 +5,8 @@ import json
 import os
 import sys
 
+from engineFeatures import *
+
 #paths
 DATA_PATH = "data/launcher_data.json"
 
@@ -13,6 +15,8 @@ data = {}
 with open(DATA_PATH, 'r') as f:
     data = json.load(f)
 screenData = data["screenData"]
+subData = data["subScreenData"]
+projects = data["recentProjects"]
 
 
 class Launcher:
@@ -28,6 +32,10 @@ class Launcher:
         pygame.display.set_caption(self.title)
         self.clock = pygame.time.Clock()
 
+        #subscreens
+        self.topBar = SubScreen(0, 0, self.width, self.height//subData["topBar"]["heightF"], self.screen, subData["topBar"]["bg"], "topBar")
+        self.projectWin = SubScreen(0, self.height//subData["topBar"]["heightF"], self.width, self.height-self.height//subData["topBar"]["heightF"], self.screen, subData["projectWin"]["bg"])
+
         #run
         self.run()
     
@@ -42,12 +50,16 @@ class Launcher:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.shut_down()
+        #update (clear) SubScreens
+        self.topBar.update()
+        self.projectWin.update()
 
     def render(self):
         self.screen.fill(self.bg_color)
 
         #renders
-
+        self.topBar.render()
+        self.projectWin.render()
         #pygame update
         pygame.display.flip()
 
@@ -60,4 +72,5 @@ class Launcher:
             json.dump(data, f)
 
 if __name__ == "__main__":
+    pygame.init()
     Launcher()
