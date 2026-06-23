@@ -8,10 +8,11 @@
     },
     "subScreenData": {
         "topBar":{"heightF": 20, "bg":[54, 61, 74]},
-        "projectWin":{"bg": [33, 38, 46]}
+        "projectWin":{"bg": [33, 38, 46]},
+        "newScreen": {"bg": [33, 38, 46]}
     },
     "buttons": {
-        "create": {"x": 1, "y": 1, "width": 50, "height": 37, "color": [77, 89, 153], "hoverColor": [119, 137, 237]}
+        "create": {"x": 1, "y": 1, "width": 50, "height": 37, "color": [77, 89, 153], "hoverColor": [119, 137, 237], "text": "+", "Tcolor": "white", "size": 20}
     },
     "recentProjects": {
 
