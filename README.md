@@ -1,3 +1,0 @@
-still in developement
-    
-    
