@@ -6,7 +6,10 @@
         "screen_width": 800,
         "screen_height": 600,
         "target_fps": 60,
-        "start_scene": ""
+        "start_scene": "main",
+        "bg_color": "black"
     },
-    "scenes": {}
+    "scenes": {
+        "main": "/data/scenes/main.json"
+    }
 }

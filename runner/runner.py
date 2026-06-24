@@ -19,23 +19,53 @@ class Runner:
         self.height = config["screen_height"]
         self.fps = config["target_fps"]
         #set up screen
-        self.display = pygame.display.set_mode((self.width, self.height))
+        self.bg_color = config["bg_color"]
+        self.DW, self.DH = 0.0, 0.0
+        self.display = pygame.display.set_mode((self.width, self.height), flags=pygame.RESIZABLE)
         self.screen = pygame.Surface((self.width, self.height))
         pygame.display.set_caption(data["project_name"])
         #clock
         self.clock = pygame.time.Clock()
+        #gameplay info
+        self.scene = config["start_scene"]
+        if self.scene == "": self.shut_down() #if their is no main scene, shut down
+        with open(project_path+data["scenes"][self.scene], "r") as f: self.scene_data = json.load(f)
+        self.objs = {"-5":[], "-4":[], "-3":[], "-2":[], "-1":[], "0":[], "1":[], "2":[], "3":[], "4":[], "5":[]}
+        self.dt = 0.0
         #run
         self.run()
 
 
     def run(self): #test function
+        self.new_scene()
         while True:
-            self.clock.tick(self.fps)
-            self.screen.fill((0, 0, 0))
-            self.display.blit(self.screen, (0, 0))
-            pygame.display.update()
+            self.update()
+            self.render()
 
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
+    def new_scene(self): #init scene objects
+        self.bg_color = self.scene_data["bg"]
+        for obj in self.scene_data["objects"]: pass
+
+    def update(self):
+        self.dt = self.clock.tick(self.fps)//1000.0
+        events = pygame.event.get()
+        for event in events:
+            self.handle_scaling(event)
+            if event.type == pygame.QUIT: self.shut_down()
+
+    def render(self):
+        self.screen.fill(self.bg_color)
+
+
+        self.display.blit(pygame.transform.scale(self.screen, self.display.get_size()),(0, 0))
+        pygame.display.flip()
+
+    def handle_scaling(self, event):
+        if event.type == pygame.VIDEORESIZE:
+            self.DW = event.w/self.width
+            self.DH = event.h/self.height
+            self.display = pygame.display.set_mode((event.w, event.h), flags=pygame.RESIZABLE)
+
+    def shut_down(self):
+        pygame.quit()
+        sys.exit()
