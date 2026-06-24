@@ -1,5 +1,5 @@
 {
-    "screenData":{
+    "screenData": {
         "width": 1152,
         "height": 648,
         "title": "devPace Launcher",
@@ -7,14 +7,61 @@
         "fps": 60
     },
     "subScreenData": {
-        "topBar":{"heightF": 20, "bg":[54, 61, 74]},
-        "projectWin":{"bg": [33, 38, 46]},
-        "newScreen": {"bg": [33, 38, 46]}
+        "topBar": {
+            "heightF": 20,
+            "bg": [
+                54,
+                61,
+                74
+            ]
+        },
+        "projectWin": {
+            "bg": [
+                33,
+                38,
+                46
+            ]
+        },
+        "newScreen": {
+            "bg": [
+                33,
+                38,
+                46
+            ]
+        }
     },
     "buttons": {
-        "create": {"x": 1, "y": 1, "width": 50, "height": 37, "color": [77, 89, 153], "hoverColor": [119, 137, 237], "text": "+", "Tcolor": "white", "size": 20}
+        "create": {
+            "x": 1,
+            "y": 1,
+            "width": 50,
+            "height": 37,
+            "color": [
+                77,
+                89,
+                153
+            ],
+            "hoverColor": [
+                119,
+                137,
+                237
+            ],
+            "text": "+",
+            "Tcolor": "white",
+            "size": 20
+        }
     },
-    "recentProjects": {
-
+    "recentProjects": {},
+    "project_template": {
+        "project_name": "Project Name Here",
+        "path": "projects/Project Name Here",
+        "engine_version": "0.0.1",
+        "config": {
+            "screen_width": 800,
+            "screen_height": 600,
+            "target_fps": 60,
+            "start_scene": ""
+        },
+        "scenes": {}
     }
 }

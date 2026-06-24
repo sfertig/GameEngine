@@ -4,6 +4,7 @@ import pygame
 import json
 import os
 import sys
+import time
 
 from engineFeatures import *
 
@@ -19,16 +20,20 @@ subData = data["subScreenData"]
 projects = data["recentProjects"]
 butData = data["buttons"]
 newScreenData = data["subScreenData"]["newScreen"]
+projectTemplate = data["project_template"]
+
+ENGINE_VERSION = "0.0.1"
 
 
 class Launcher:
-    def __init__(self):
+    def __init__(self, _ENGINE_VERSION="0.0.1"):
         self.width = screenData["width"]
         self.height = screenData['height']
         self.title = screenData["title"]
         self.fps = screenData["fps"]
         self.bg_color = screenData["bg color"]
         self.mouse_down = False
+        ENGINE_VERSION = _ENGINE_VERSION
 
         #screen and clock setup
         self.screen = pygame.display.set_mode((self.width, self.height))
@@ -90,19 +95,35 @@ class Launcher:
         pygame.quit()
         sys.exit()
 
-    def save_launcher_data(self):
+def save_launcher_data():
         with open(DATA_PATH, 'w') as f:
             json.dump(data, f)
+
 
 class NewProject:
     def __init__(self, screen):
         self.screen: pygame.Surface = screen
         self.running = True
+        self.mouse_down = False
 
-        #test input
-        self.inputText = Button(10, 10, 100, 25, [33, 38, 46], None, self.screen)
+        # name input
+        self.inputText = Button(10, 10, 200, 25, [33, 38, 46], None, self.screen)
         self.inputText.add_text("Name:", "white", 20)
-        self.input = TextInputBox(10, 40, 200, 25, "black", "darkgray", "gray", 20, self.screen)
+        self.input = TextInputBox(10, 40, 200, 25, "black", [100, 100, 100], "gray", 20, self.screen)
+
+        # path input
+        self.pathText = Button(10, 100, 200, 25, [33, 38, 46], None, self.screen)
+        self.pathText.add_text("Path:", "white", 20)
+        self.pathBox = TextInputBox(10, 130, 200, 25, "black", [100, 100, 100], "gray", 20, self.screen)
+        self.pathBox.text = "projects/"
+
+        #interactable buttons
+        self.cancel = Button(10, 200, 100, 30, [33, 38, 46], [100, 100, 100], self.screen)
+        self.cancel.add_text("Cancel", "white", 20)
+        self.create = Button(130, 200, 100, 30, [33, 38, 46], [100, 100, 100], self.screen)
+        self.create.add_text("Create", "white", 20)
+
+        #run
         self.run()
 
     def run(self):
@@ -112,12 +133,22 @@ class NewProject:
             if self.running: self.render()
 
     def update(self):
-
+        click = False
         for event in pygame.event.get():
             if event.type == pygame.QUIT: 
-                self.exit_no_save()
+                self.shut_down()
                 return
+            if event.type == pygame.MOUSEBUTTONDOWN: self.mouse_down = True
+            if event.type == pygame.MOUSEBUTTONUP:
+                if self.mouse_down: 
+                    click = True
+                    self.mouse_down = False
             self.input.update(event)
+            self.pathBox.update(event)
+        self.cancel.update(click)
+        self.create.update(click)
+        if self.cancel.is_pressed: self.exit_no_new()
+        if self.create.is_pressed: self.create_project()
 
     def render(self):
         #clear
@@ -125,11 +156,78 @@ class NewProject:
         #renders
         self.inputText.render()
         self.input.render()
+        self.pathText.render()
+        self.pathBox.render()
+        self.cancel.render()
+        self.create.render()
         #update pygame
         pygame.display.flip()
 
-    def exit_no_save(self):
+    def exit_no_new(self):
         self.running = False
+
+    def shut_down(self):
+        save_launcher_data()
+        pygame.quit()
+        sys.exit()
+
+    def create_project(self):
+        name = self.format_project_name()
+        path = self.gen_project_path()
+        print(name, path)
+        folder = path + name
+        #generate folder with name
+        try:
+            os.mkdir(folder)
+        except:
+            self.exit_no_new()
+        #populate directory with folders
+        try:
+            os.mkdir(folder + "/data")
+            os.mkdir(folder + "/data/scenes")
+            os.mkdir(folder + "/data/scripts")
+            os.mkdir(folder + "/assets")
+            os.mkdir(folder + "/assets/images")
+            os.mkdir(folder + "/assets/sounds")
+            os.mkdir(folder + "/assets/fonts")
+        except:
+            self.exit_no_new()
+        #populate details.json
+        data: dict = projectTemplate.copy()
+        data["project_name"] = name
+        data["path"] = folder
+        data["engine_version"] = ENGINE_VERSION
+        with open(folder + "/details.json", "w") as f:
+            json.dump(data, f)
+
+        self.exit_no_new()
+
+    def format_project_name(self):
+        n = list(self.input.text)
+        name=""
+        for i in n:
+            if i == " ": name += "-"
+            elif i == "/": pass
+            elif i == "\\": pass
+            elif i == ":": pass
+            elif i == "*": pass
+            elif i == "?": pass
+            elif i == '"': pass
+            elif i == "<": pass
+            elif i == ">": pass
+            elif i == "|": pass
+            elif i == ".": pass            
+            else: name += i
+        return name
+    
+    def gen_project_path(self):
+        #if internal path
+        p = self.pathBox.text
+        if p == "projects/": return p
+        #if external path
+        if p[-1] != "/": p += "/"
+        return p
+        
 
 
 if __name__ == "__main__":

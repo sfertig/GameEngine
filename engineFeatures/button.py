@@ -58,13 +58,14 @@ class TextInputBox:
         self.size = size
         self.screen = screen
         self.text_screen = SubScreen(x, y, width, height, screen, color)
+        self.rect = pygame.Rect(x, y, width, height)
 
         self.active = False
         self.text = ''
 
     def update(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
-            self.active = self.text_screen.screen.get_rect().collidepoint(event.pos)
+            self.active = self.rect.collidepoint(event.pos)
             self.text_screen.bg = self.active_color if self.active else self.color
         
         if event.type == pygame.KEYDOWN and self.active:
@@ -72,6 +73,7 @@ class TextInputBox:
                 self.text = self.text[:-1]
             elif event.key == pygame.K_RETURN or event.key == pygame.K_ESCAPE:
                 self.active = False
+                self.text_screen.bg = self.color
             else:
                 self.text += event.unicode
 
@@ -83,7 +85,7 @@ class TextInputBox:
         #get and center text
         text_render = pygame.font.SysFont("Arial", self.size).render(self.text, True, self.Tcolor)
         text_rect = text_render.get_rect()
-        text_rect.center = self.text_screen.screen.get_rect().center
+        text_rect.center = self.rect.center
         self.text_screen.screen.blit(text_render, (0, 0))
 
         #update render
