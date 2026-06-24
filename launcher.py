@@ -12,15 +12,15 @@ from engineFeatures import *
 DATA_PATH = "data/launcher_data.json"
 
 #data
-data = {}
+Data = {}
 with open(DATA_PATH, 'r') as f:
-    data = json.load(f)
-screenData = data["screenData"]
-subData = data["subScreenData"]
-projects = data["recentProjects"]
-butData = data["buttons"]
-newScreenData = data["subScreenData"]["newScreen"]
-projectTemplate = data["project_template"]
+    Data = json.load(f)
+screenData = Data["screenData"]
+subData = Data["subScreenData"]
+projects = Data["recentProjects"]
+butData = Data["buttons"]
+newScreenData = Data["subScreenData"]["newScreen"]
+projectTemplate = Data["project_template"]
 
 ENGINE_VERSION = "0.0.1"
 
@@ -34,6 +34,7 @@ class Launcher:
         self.bg_color = screenData["bg color"]
         self.mouse_down = False
         ENGINE_VERSION = _ENGINE_VERSION
+        self.projects = []
 
         #screen and clock setup
         self.screen = pygame.display.set_mode((self.width, self.height))
@@ -47,6 +48,8 @@ class Launcher:
         #buttons
         self.create_button = Button(butData["create"]["x"], butData["create"]["y"], butData["create"]["width"], butData["create"]["height"], butData["create"]["color"], butData["create"]["hoverColor"], self.topBar.screen)
         self.create_button.add_text(butData["create"]["text"], butData["create"]["Tcolor"], butData["create"]["size"])
+        #gen
+        self.gen_projects()
         #run
         self.run()
     
@@ -56,10 +59,19 @@ class Launcher:
             self.update()
             self.render()
 
+    def gen_projects(self):
+        self.projects = []
+        y = 10
+        for p in projects:
+            self.projects.append(ProjectDisplay(10, y, 500, 100, self.projectWin.screen, p))
+            y += 110
+        print(self.projects)
+
     def update(self):
         click = False
         self.clock.tick(self.fps)
-        for event in pygame.event.get():
+        events = pygame.event.get()
+        for event in events:
             if event.type == pygame.QUIT:
                 self.shut_down()
             if event.type == pygame.MOUSEBUTTONDOWN: self.mouse_down = True
@@ -70,7 +82,13 @@ class Launcher:
 
         #button updates
         self.create_button.update(click)
-        if self.create_button.is_pressed: NewProject(self.screen)
+        if self.create_button.is_pressed: 
+            NewProject(self.screen)
+            self.gen_projects()
+
+        #update projects
+        for p in self.projects:
+            p.update(events)
 
         
 
@@ -85,9 +103,13 @@ class Launcher:
 
         #buttons
         self.create_button.render()
+        #render projects
+        for p in self.projects:
+            p.render()
 
         self.topBar.render()
         self.projectWin.render()
+
         #pygame update
         pygame.display.flip()
 
@@ -97,7 +119,44 @@ class Launcher:
 
 def save_launcher_data():
         with open(DATA_PATH, 'w') as f:
-            json.dump(data, f)
+            json.dump(Data, f)
+
+class ProjectDisplay:
+    def __init__(self, x, y, width, height, screen, project:dict, bg="black"):
+        self.x, self.y, self.width, self.height = x, y, width, height
+        self.screen = SubScreen(x, y, width, height, screen, bg)
+        self.p = project
+        self.speed = 100
+        #info
+        self.name = Button(5, 5, width-10, 25, [33, 38, 46], [100, 100, 100], self.screen.screen)
+        self.name.add_text(project["name"], "white", 20)
+        self.path = Button(5, 35, width-10, 25, [33, 38, 46], [100, 100, 100], self.screen.screen)
+        self.path.add_text(project["path"], "white", 20)
+        self.version = Button(5, 65, width-10, 25, [33, 38, 46], [100, 100, 100], self.screen.screen)
+        self.version.add_text("version: "+ project["version"], "white", 20)
+
+    def update(self, events):
+        for event in events:
+            if event.type == pygame.MOUSEWHEEL:
+                #scroll down
+                if event.y > 0:
+                    print("up")
+                    self.screen.y += self.speed
+                    self.screen.screen.get_rect().y += self.speed
+                #scroll up
+                if event.y < 0:
+                    print("down")
+                    self.screen.y -= self.speed
+                    self.screen.screen.get_rect().y -= self.speed
+    def render(self):
+        self.screen.update()
+
+        self.name.render()
+        self.path.render()
+        self.version.render()
+
+        self.screen.render()
+
 
 
 class NewProject:
@@ -199,6 +258,14 @@ class NewProject:
         data["engine_version"] = ENGINE_VERSION
         with open(folder + "/details.json", "w") as f:
             json.dump(data, f)
+
+        #add to recent projects
+        data: dict = Data["recentTemplate"].copy()
+        data["name"] = name
+        data["path"] = folder
+        data["version"] = ENGINE_VERSION
+        projects.append(data)
+        save_launcher_data()
 
         self.exit_no_new()
 
