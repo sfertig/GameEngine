@@ -4,7 +4,6 @@ import sys
 #one running instance check
 
 try:
-    # This will raise a SingleInstanceException if already running
     me = singleton.SingleInstance()
 except singleton.SingleInstanceException:
     sys.exit(0)

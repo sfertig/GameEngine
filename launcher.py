@@ -64,9 +64,8 @@ class Launcher:
         y = 10
         for p in projects:
             #check if project folder exists
-            if not os.path.exists(p["path"]):
-                projects.remove(p)
-                continue
+            """if not os.path.exists(p["path"]):
+                continue"""
                 #create project
             self.projects.append(ProjectDisplay(10, y, 500, 100, self.projectWin.screen, p))
             y += 110
@@ -93,11 +92,6 @@ class Launcher:
         #update projects
         for p in self.projects:
             p.update(events)
-            if p.remove_button.is_pressed: pass
-                #remove from projects
-                #TODO: fix
-                #projects.remove(p)
-                #self.gen_projects()
 
     def render(self):
         self.screen.fill(self.bg_color)
