@@ -24,13 +24,14 @@ class Button:
         self.is_pressed = False
         #TODO: maby add sygnal: self.pressed_signal = None
 
-    def update(self, click):
+    def update(self, click, mpos=None):
         self.is_pressed = False
-        mpos = pygame.mouse.get_pos()
+        if mpos == None: mpos = pygame.mouse.get_pos()
         self.is_hovering = self.rect.collidepoint(mpos)
         if click and self.is_hovering:
             self.hovering = False
             self.is_pressed = True
+        
 
     def add_text(self, text, color, size):
         self.text = text
@@ -64,9 +65,9 @@ class TextInputBox:
         self.text = ''
 
     def update(self, event):
+        self.text_screen.bg = self.active_color if self.active else self.color
         if event.type == pygame.MOUSEBUTTONDOWN:
             self.active = self.rect.collidepoint(event.pos)
-            self.text_screen.bg = self.active_color if self.active else self.color
         
         if event.type == pygame.KEYDOWN and self.active:
             if event.key == pygame.K_BACKSPACE:

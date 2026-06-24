@@ -34,7 +34,7 @@ class Launcher:
         self.bg_color = screenData["bg color"]
         self.mouse_down = False
         ENGINE_VERSION = _ENGINE_VERSION
-        self.projects = []
+        self.projects: list = []
 
         #screen and clock setup
         self.screen = pygame.display.set_mode((self.width, self.height))
@@ -70,7 +70,6 @@ class Launcher:
                 #create project
             self.projects.append(ProjectDisplay(10, y, 500, 100, self.projectWin.screen, p))
             y += 110
-        print(self.projects)
 
     def update(self):
         click = False
@@ -94,9 +93,11 @@ class Launcher:
         #update projects
         for p in self.projects:
             p.update(events)
-
-        
-
+            if p.remove_button.is_pressed: pass
+                #remove from projects
+                #TODO: fix
+                #projects.remove(p)
+                #self.gen_projects()
 
     def render(self):
         self.screen.fill(self.bg_color)
@@ -132,6 +133,7 @@ class ProjectDisplay:
         self.screen = SubScreen(x, y, width, height, screen, bg)
         self.p = project
         self.speed = 100
+        self.mouse_down = False
         #info
         self.name = Button(5, 5, width//2, 25, [33, 38, 46], [100, 100, 100], self.screen.screen)
         self.name.add_text(project["name"], "white", 20)
@@ -139,8 +141,16 @@ class ProjectDisplay:
         self.path.add_text(project["path"], "white", 20)
         self.version = Button(5, 65, width//2, 25, [33, 38, 46], [100, 100, 100], self.screen.screen)
         self.version.add_text("version: "+ project["version"], "white", 20)
+        #buttons: run, edit, remove
+        self.run_button = Button(width//2+10, 5, width//2-15, 25, [33, 38, 46], [100, 100, 100], self.screen.screen)
+        self.run_button.add_text("Run", "white", 20)
+        self.edit_button = Button(width//2+10, 35, width//2-15, 25, [33, 38, 46], [100, 100, 100], self.screen.screen)
+        self.edit_button.add_text("Edit", "white", 20)
+        self.remove_button = Button(width//2+10, 65, width//2-15, 25, [33, 38, 46], [100, 100, 100], self.screen.screen)
+        self.remove_button.add_text("Remove", "white", 20)
 
     def update(self, events):
+        click = False
         for event in events:
             if event.type == pygame.MOUSEWHEEL:
                 #scroll down
@@ -151,12 +161,27 @@ class ProjectDisplay:
                 if event.y > 0:
                     self.screen.y -= self.speed
                     self.screen.screen.get_rect().y -= self.speed
+            if event.type == pygame.MOUSEBUTTONDOWN: self.mouse_down = True
+            if event.type == pygame.MOUSEBUTTONUP:
+                if self.mouse_down: 
+                    click = True
+                    self.mouse_down = False
+        #gen right mpos for each button
+        self.run_button.update(click, self.screen.get_local_mouse(0, -20))
+        self.edit_button.update(click, self.screen.get_local_mouse(0, -20))
+        self.remove_button.update(click, self.screen.get_local_mouse(0, -20))        
+
+
     def render(self):
         self.screen.update()
 
         self.name.render()
         self.path.render()
         self.version.render()
+
+        self.run_button.render()
+        self.edit_button.render()
+        self.remove_button.render()
 
         self.screen.render()
 
@@ -172,6 +197,7 @@ class NewProject:
         self.inputText = Button(10, 10, 200, 25, [33, 38, 46], None, self.screen)
         self.inputText.add_text("Name:", "white", 20)
         self.input = TextInputBox(10, 40, 200, 25, "black", [100, 100, 100], "gray", 20, self.screen)
+        self.input.active = True
 
         # path input
         self.pathText = Button(10, 100, 200, 25, [33, 38, 46], None, self.screen)
