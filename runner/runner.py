@@ -3,6 +3,8 @@ import json
 import os
 import sys
 
+from .gameObjects import *
+
 ENGINE_VERSION = "0.0.1"
 
 data: dict = {}
@@ -31,6 +33,7 @@ class Runner:
         if self.scene == "": self.shut_down() #if their is no main scene, shut down
         with open(project_path+data["scenes"][self.scene], "r") as f: self.scene_data = json.load(f)
         self.objs = {"-5":[], "-4":[], "-3":[], "-2":[], "-1":[], "0":[], "1":[], "2":[], "3":[], "4":[], "5":[]}
+        self.obj_ids = {}
         self.dt = 0.0
         #run
         self.run()
@@ -43,8 +46,29 @@ class Runner:
             self.render()
 
     def new_scene(self): #init scene objects
+        #reset
+        for layer in self.objs: layer = []
+        self.obj_ids.clear()
         self.bg_color = self.scene_data["bg"]
-        for obj in self.scene_data["objects"]: pass
+        #pass 1: create objects
+        for obj in self.scene_data["objects"]: 
+            #create the object
+            if obj["type"] == "Node": i = Node()
+            elif obj["type"] == "Node2D": i = Node2D(*args_from_dict(obj["args"]))
+            else: 
+                print("invalid object type: " + obj["type"]) #concel error
+                continue
+            #set layer and append to list
+            i.set_layer(obj["layer"])
+            self.objs[str(obj["layer"])].append(i)
+            self.obj_ids[obj["id"]] = i
+        #pass 2: set parents / children
+        for obj in self.scene_data["objects"]:
+            if len(obj["children"]) == 0: continue
+            for child in obj["children"]:
+                self.obj_ids[child].parent = self.obj_ids[obj["id"]]
+                self.obj_ids[obj["id"]].children.append(self.obj_ids[child])
+
 
     def update(self):
         self.dt = self.clock.tick(self.fps)//1000.0
@@ -53,9 +77,16 @@ class Runner:
             self.handle_scaling(event)
             if event.type == pygame.QUIT: self.shut_down()
 
+        for layer in self.objs:
+            for obj in self.objs[layer]:
+                obj.update(events, self.dt)
+
     def render(self):
         self.screen.fill(self.bg_color)
 
+        for layer in self.objs:
+            for obj in self.objs[layer]:
+                obj.render(self.screen)
 
         self.display.blit(pygame.transform.scale(self.screen, self.display.get_size()),(0, 0))
         pygame.display.flip()
@@ -69,3 +100,9 @@ class Runner:
     def shut_down(self):
         pygame.quit()
         sys.exit()
+
+def args_from_dict(d):
+    i = []
+    for key, value in d.items():
+        i.append(value)
+    return i

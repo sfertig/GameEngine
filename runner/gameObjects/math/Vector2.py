@@ -5,12 +5,6 @@ class Vector2:
         self.x = x
         self.y = y
 
-        self.ZERO = Vector2(0, 0)
-        self.UP = Vector2(0, -1)
-        self.DOWN = Vector2(0, 1)
-        self.LEFT = Vector2(-1, 0)
-        self.RIGHT = Vector2(1, 0)
-
     def __add__(self, other):
         if isinstance(other, Vector2):
             return Vector2(self.x + other.x, self.y + other.y)
