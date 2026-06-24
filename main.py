@@ -13,7 +13,7 @@ except singleton.SingleInstanceException:
 from launcher import Launcher
 import pygame
 
-ENGINE_VERSION = "0.0.1"
+ENGINE_VERSION = "0.1.1"
 
 pygame.init()
 
