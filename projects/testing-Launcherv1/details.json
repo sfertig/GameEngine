@@ -1,0 +1,12 @@
+{
+    "project_name": "testing-Launcherv1",
+    "path": "projects/testing-Launcherv1",
+    "engine_version": "0.0.1",
+    "config": {
+        "screen_width": 800,
+        "screen_height": 600,
+        "target_fps": 60,
+        "start_scene": ""
+    },
+    "scenes": {}
+}

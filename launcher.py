@@ -7,6 +7,8 @@ import sys
 import time
 
 from engineFeatures import *
+from runner import Runner
+
 
 #paths
 DATA_PATH = "data/launcher_data.json"
@@ -92,6 +94,11 @@ class Launcher:
         #update projects
         for p in self.projects:
             p.update(events)
+            if p.run_button.is_pressed:
+                save_launcher_data()
+                pygame.quit()
+                time.sleep(0.1)
+                Runner(p.p["path"], ENGINE_VERSION)
 
     def render(self):
         self.screen.fill(self.bg_color)
