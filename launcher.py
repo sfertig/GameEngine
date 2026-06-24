@@ -63,6 +63,11 @@ class Launcher:
         self.projects = []
         y = 10
         for p in projects:
+            #check if project folder exists
+            if not os.path.exists(p["path"]):
+                projects.remove(p)
+                continue
+                #create project
             self.projects.append(ProjectDisplay(10, y, 500, 100, self.projectWin.screen, p))
             y += 110
         print(self.projects)
@@ -128,24 +133,22 @@ class ProjectDisplay:
         self.p = project
         self.speed = 100
         #info
-        self.name = Button(5, 5, width-10, 25, [33, 38, 46], [100, 100, 100], self.screen.screen)
+        self.name = Button(5, 5, width//2, 25, [33, 38, 46], [100, 100, 100], self.screen.screen)
         self.name.add_text(project["name"], "white", 20)
-        self.path = Button(5, 35, width-10, 25, [33, 38, 46], [100, 100, 100], self.screen.screen)
+        self.path = Button(5, 35, width//2, 25, [33, 38, 46], [100, 100, 100], self.screen.screen)
         self.path.add_text(project["path"], "white", 20)
-        self.version = Button(5, 65, width-10, 25, [33, 38, 46], [100, 100, 100], self.screen.screen)
+        self.version = Button(5, 65, width//2, 25, [33, 38, 46], [100, 100, 100], self.screen.screen)
         self.version.add_text("version: "+ project["version"], "white", 20)
 
     def update(self, events):
         for event in events:
             if event.type == pygame.MOUSEWHEEL:
                 #scroll down
-                if event.y > 0:
-                    print("up")
+                if event.y < 0:
                     self.screen.y += self.speed
                     self.screen.screen.get_rect().y += self.speed
                 #scroll up
-                if event.y < 0:
-                    print("down")
+                if event.y > 0:
                     self.screen.y -= self.speed
                     self.screen.screen.get_rect().y -= self.speed
     def render(self):
