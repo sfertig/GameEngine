@@ -8,6 +8,7 @@ import time
 
 from engineFeatures import *
 from runner import Runner
+from Editor import Editor
 
 
 #paths
@@ -99,6 +100,14 @@ class Launcher:
                 pygame.quit()
                 time.sleep(0.1)
                 Runner(p.p["path"], ENGINE_VERSION)
+                sys.exit()
+            elif p.edit_button.is_pressed:
+                save_launcher_data()
+                pygame.quit()
+                time.sleep(0.1)
+                Editor(p.p["path"], ENGINE_VERSION)
+                sys.exit()
+            
 
     def render(self):
         self.screen.fill(self.bg_color)
