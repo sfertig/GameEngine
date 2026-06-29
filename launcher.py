@@ -100,6 +100,7 @@ class Launcher:
                 pygame.quit()
                 time.sleep(0.1)
                 Runner(p.p["path"], ENGINE_VERSION)
+                print("<LAUNCHER>: EXITTING WITH CODE 01")
                 sys.exit()
             elif p.edit_button.is_pressed:
                 save_launcher_data()
@@ -130,6 +131,7 @@ class Launcher:
         pygame.display.flip()
 
     def shut_down(self):
+        print("<LAUNCHER>: EXITTING WITH CODE 00")
         pygame.quit()
         sys.exit()
 
