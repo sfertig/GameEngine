@@ -14,6 +14,8 @@ import pygame
 
 ENGINE_VERSION = "0.1.1"
 
+print(f"DevPace Engine v{ENGINE_VERSION} init...")
+
 pygame.init()
 
 Launcher(ENGINE_VERSION)

@@ -30,7 +30,7 @@ class Runner:
         self.clock = pygame.time.Clock()
         #gameplay info
         self.scene = config["start_scene"]
-        if self.scene == "": self.shut_down() #if their is no main scene, shut down
+        if self.scene == "": self.exit_code("02") #if their is no main scene, shut down
         with open(project_path+data["scenes"][self.scene], "r") as f: self.scene_data = json.load(f)
         self.objs = {"-5":[], "-4":[], "-3":[], "-2":[], "-1":[], "0":[], "1":[], "2":[], "3":[], "4":[], "5":[]}
         self.obj_ids = {}
@@ -98,6 +98,12 @@ class Runner:
             self.display = pygame.display.set_mode((event.w, event.h), flags=pygame.RESIZABLE)
 
     def shut_down(self):
+        print("<RUNNER>: EXITING WITH CODE 00")
+        pygame.quit()
+        sys.exit()
+
+    def exit_code(self, code):
+        print(f"<RUNNER>: EXITING WITH CODE {code}")
         pygame.quit()
         sys.exit()
 

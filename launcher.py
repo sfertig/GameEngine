@@ -30,6 +30,7 @@ ENGINE_VERSION = "0.0.1"
 
 class Launcher:
     def __init__(self, _ENGINE_VERSION="0.0.1"):
+        print("loading launcher...")
         self.width = screenData["width"]
         self.height = screenData['height']
         self.title = screenData["title"]
@@ -54,6 +55,7 @@ class Launcher:
         #gen
         self.gen_projects()
         #run
+        print("Launcher v" + ENGINE_VERSION + " running")
         self.run()
     
 
@@ -99,6 +101,7 @@ class Launcher:
                 save_launcher_data()
                 pygame.quit()
                 time.sleep(0.1)
+                print("laoding project run...")
                 Runner(p.p["path"], ENGINE_VERSION)
                 print("<LAUNCHER>: EXITTING WITH CODE 01")
                 sys.exit()
@@ -106,6 +109,7 @@ class Launcher:
                 save_launcher_data()
                 pygame.quit()
                 time.sleep(0.1)
+                print("laoding project edit...")
                 Editor(p.p["path"], ENGINE_VERSION)
                 sys.exit()
             
@@ -339,5 +343,6 @@ class NewProject:
 
 
 if __name__ == "__main__":
+    print("DEBUG LAUNCHER...")
     pygame.init()
     Launcher()

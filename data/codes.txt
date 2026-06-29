@@ -2,3 +2,4 @@ defining exit and error codes
 
 00: <any> safe shut down
 01: <launcher> when runner exits inpropperly and attempts to continue the launcher
+02: <runner> when no main scene is defined

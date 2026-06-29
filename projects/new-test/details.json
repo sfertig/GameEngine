@@ -1,6 +1,6 @@
 {
-    "project_name": "testing-Launcherv1",
-    "path": "projects/testing-Launcherv1",
+    "project_name": "new-test",
+    "path": "projects/new-test",
     "engine_version": "0.0.1",
     "config": {
         "screen_width": 800,
