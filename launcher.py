@@ -57,7 +57,25 @@ class Launcher:
         #run
         print("Launcher v" + ENGINE_VERSION + " running")
         self.run()
-    
+
+    def reload(self):
+        pygame.init()
+        self.projects: list = []
+
+        #screen and clock setup
+        self.screen = pygame.display.set_mode((self.width, self.height))
+        pygame.display.set_caption(self.title)
+        self.clock = pygame.time.Clock()
+
+        #subscreens
+        self.topBar = SubScreen(0, 0, self.width, self.height//subData["topBar"]["heightF"], self.screen, subData["topBar"]["bg"], "topBar")
+        self.projectWin = SubScreen(0, self.height//subData["topBar"]["heightF"], self.width, self.height-self.height//subData["topBar"]["heightF"], self.screen, subData["projectWin"]["bg"])
+
+        #buttons
+        self.create_button = Button(butData["create"]["x"], butData["create"]["y"], butData["create"]["width"], butData["create"]["height"], butData["create"]["color"], butData["create"]["hoverColor"], self.topBar.screen)
+        self.create_button.add_text(butData["create"]["text"], butData["create"]["Tcolor"], butData["create"]["size"])
+        #gen
+        self.gen_projects()        
 
     def run(self):
         while True:
@@ -101,17 +119,16 @@ class Launcher:
                 save_launcher_data()
                 pygame.quit()
                 time.sleep(0.1)
-                print("laoding project run...")
+                print("loading project run...")
                 Runner(p.p["path"], ENGINE_VERSION)
-                print("<LAUNCHER>: EXITTING WITH CODE 01")
-                sys.exit()
+                self.reload()
             elif p.edit_button.is_pressed:
                 save_launcher_data()
                 pygame.quit()
                 time.sleep(0.1)
-                print("laoding project edit...")
+                print("loading project edit...")
                 Editor(p.p["path"], ENGINE_VERSION)
-                sys.exit()
+                self.reload()
             
 
     def render(self):

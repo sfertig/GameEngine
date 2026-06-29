@@ -8,7 +8,7 @@
         "target_fps": 60,
         "start_scene": "main",
         "bg_color": "black",
-        "relaunch": false
+        "relaunch": true
     },
     "scenes": {
         "main": "/data/scenes/main.json"

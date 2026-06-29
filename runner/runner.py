@@ -17,6 +17,7 @@ class Runner:
         #get screen values
         with open(project_path + "/details.json", "r") as f: data = json.load(f)
         config = data["config"]
+        self.config = config
         self.width = config["screen_width"]
         self.height = config["screen_height"]
         self.fps = config["target_fps"]
@@ -36,14 +37,15 @@ class Runner:
         self.obj_ids = {}
         self.dt = 0.0
         #run
+        self.running = True
         self.run()
 
 
     def run(self): #test function
         self.new_scene()
-        while True:
+        while self.running:
             self.update()
-            self.render()
+            if self.running:self.render()
 
     def new_scene(self): #init scene objects
         #reset
@@ -75,7 +77,9 @@ class Runner:
         events = pygame.event.get()
         for event in events:
             self.handle_scaling(event)
-            if event.type == pygame.QUIT: self.shut_down()
+            if event.type == pygame.QUIT: 
+                if not self.config["relaunch"]:self.shut_down()
+                else: self.running = False
 
         for layer in self.objs:
             for obj in self.objs[layer]:
