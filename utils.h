@@ -6,11 +6,23 @@
 #include <vector>
 #include <string>
 #include <variant>
+#include <unordered_map>
+#include "raylib.h"
 
 typedef std::string str;
+typedef std::unordered_map<str, str> str_dict; 
 
 void print_str(str s, bool nl = true);
 void print_int(int i, bool nl = true);
 void nl();
+
+//dicts
+
+std::unordered_map<str, Color> Colors;
+str_dict newProjectDetails;
+
+//reading files (json as dict[str, str])
+str_dict read_json(str path);
+void save_json(str path, str_dict details);
 
 #endif

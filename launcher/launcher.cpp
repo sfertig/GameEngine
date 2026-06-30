@@ -8,7 +8,8 @@
 str LAUNCHER_VERSION = "1.0.0";
 
 // 1. The Constructor implementation
-Launcher::Launcher() {
+Launcher::Launcher(str version) {
+    EDITOR_VERSION = version;
     running = true;
     width = 800;
     height = 600;

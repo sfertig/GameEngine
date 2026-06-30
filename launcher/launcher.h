@@ -7,8 +7,11 @@
 #include <string>
 #include <variant>
 #include <raylib.h>
+#include <unordered_map>
 
 typedef std::string str;
+
+
 
 class Launcher {
     public:
@@ -17,8 +20,11 @@ class Launcher {
 
         int width; int height;
         Color bg_color;
+
+        str EDITOR_VERSION;
+
         //funcs
-        Launcher();
+        Launcher(str version);
         void run();
         void update();
         void render();
