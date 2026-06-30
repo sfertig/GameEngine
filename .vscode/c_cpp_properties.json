@@ -5,7 +5,8 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/**",
-                "C:/Users/sfert/Documents/raylib-5.5_win64_mingw-w64/include"
+                "C:/Users/sfert/Documents/raylib-5.5_win64_mingw-w64/include",
+                "${workspaceFolder}/launcher/**"
             ],
             "defines": [
                 "_DEBUG",
