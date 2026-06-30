@@ -1,19 +1,14 @@
 #include "raylib.h"
+#include "utils.h"
+#include <string>
+#include <iostream>
+
+const str ENGINE_VERSION = "1.0.0";
 
 
 int main() {
-    // Initialize window: width, height, title
-    InitWindow(800, 450, "raylib [core] example - basic window");
+    nl(); print_str("Devpace launched successfully"); nl();
+    print_str("DevPace version: " + ENGINE_VERSION);
 
-    SetTargetFPS(60); // Set game to run at 60 frames-per-second
-
-    while (!WindowShouldClose()) { // Detect window close button or ESC key
-        BeginDrawing();
-            ClearBackground(RAYWHITE);
-            DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
-        EndDrawing();
-    }
-
-    CloseWindow(); // Close window and OpenGL context
     return 0;
 }
