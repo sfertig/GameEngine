@@ -25,6 +25,15 @@ void print_int(int i, bool nl) {
     }
 }
 
+void print_dict(str_dict d, bool nl) {
+    for (const auto& pair : d) {
+        std::cout << pair.first << ": " << pair.second << std::endl;
+    }
+    if (nl) {
+        std::cout << std::endl;
+    }
+}
+
 void nl() {
     std::cout << std::endl;
 }
@@ -81,6 +90,11 @@ str_dict read_json(str path) {
     
     return details;
 };
+
+struct _launcher_colors launcher_colors = {
+    Color{190, 190, 190, 255},
+    Color{54, 61, 74, 255}
+}; 
 
 void save_json(str path, str_dict details) {
     // 1. Open an output file stream

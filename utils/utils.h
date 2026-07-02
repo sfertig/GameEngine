@@ -14,12 +14,22 @@ typedef std::unordered_map<str, str> str_dict;
 
 void print_str(str s, bool nl = true);
 void print_int(int i, bool nl = true);
+void print_dict(str_dict d, bool nl = true);
 void nl();
 
 //dicts
 
 extern std::unordered_map<str, Color> Colors;
 extern str_dict newProjectDetails;
+extern std::unordered_map<str, Color> recent_projects_dict;
+
+//defines
+
+struct _launcher_colors {
+    Color launcher_bg;
+    Color top_bar_bg;
+};
+extern _launcher_colors launcher_colors;
 
 //reading files (json as dict[str, str])
 str_dict read_json(str path);

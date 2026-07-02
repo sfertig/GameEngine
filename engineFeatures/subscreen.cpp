@@ -10,7 +10,7 @@ SubScreen::SubScreen(float x, float y, float width, float height, Color backgrou
 
 SubScreen::~SubScreen() {
     // Crucial C++ step: Free up the GPU memory when the subscreen is destroyed
-    UnloadRenderTexture(canvas);
+    //UnloadRenderTexture(canvas);
 }
 
 void SubScreen::begin_draw() {
