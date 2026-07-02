@@ -6,19 +6,27 @@
       "type": "shell",
       "command": "g++",
       "args": [
-        "main.cpp",
-        "utils.cpp",
-        "launcher/launcher.cpp",
-        "-Ilauncher",
-        "-IC:/Users/sfert/Documents/raylib-5.5_win64_mingw-w64/include",
-        "-LC:/Users/sfert/Documents/raylib-5.5_win64_mingw-w64/lib",
-        "-lraylib",
-        "-lopengl32",
-        "-lgdi32",
-        "-lwinmm",
-        "-o",
-        "app.exe"
-      ],
+            "main.cpp",
+            "launcher/launcher.cpp",
+            "engineFeatures/subscreen.cpp",
+            "utils/utils.cpp",
+            
+            // Explicit Include Directory Flags
+            "-I${workspaceFolder}",
+            "-I${workspaceFolder}/launcher",
+            "-I${workspaceFolder}/engineFeatures",
+            "-I${workspaceFolder}/utils",
+            
+            // Raylib Configs
+            "-IC:/Users/sfert/Documents/raylib-5.5_win64_mingw-w64/include",
+            "-LC:/Users/sfert/Documents/raylib-5.5_win64_mingw-w64/lib",
+            "-lraylib",
+            "-lopengl32",
+            "-lgdi32",
+            "-lwinmm",
+            "-o",
+            "app.exe"
+        ],
       "group": {
         "kind": "build",
         "isDefault": true

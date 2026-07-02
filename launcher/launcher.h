@@ -8,6 +8,7 @@
 #include <variant>
 #include <raylib.h>
 #include <unordered_map>
+#include "subscreen.h"
 
 typedef std::string str;
 
@@ -18,10 +19,12 @@ class Launcher {
         //vars
         bool running;
 
-        int width; int height;
+        float width; float height;
         Color bg_color;
 
         str EDITOR_VERSION;
+
+        SubScreen topBar;
 
         //funcs
         Launcher(str version);

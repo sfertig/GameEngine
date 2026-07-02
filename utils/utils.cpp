@@ -5,7 +5,7 @@
 #include <variant>
 #include <unordered_map>
 #include <fstream>
-#include <json.hpp>
+#include "json.hpp"
 
 using json = nlohmann::json;
 
@@ -45,7 +45,7 @@ std::unordered_map<str, Color> Colors = {
     {"yellow", YELLOW},
 };
 
-std::unordered_map<str, str> newProjectDetails = {
+str_dict newProjectDetails = {
     {"name", "DEFAULTNAME"},
     {"path", "projects/DEFAULTNAME"},
     {"version", "1.0.0"},

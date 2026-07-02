@@ -12,7 +12,7 @@ int main() {
     print_str("DevPace version: " + ENGINE_VERSION);
 
     //Launcher
-    Launcher launcher = Launcher();
+    Launcher launcher = Launcher(ENGINE_VERSION);
     launcher.run();
 
     return 0;

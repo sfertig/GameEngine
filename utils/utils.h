@@ -18,8 +18,8 @@ void nl();
 
 //dicts
 
-std::unordered_map<str, Color> Colors;
-str_dict newProjectDetails;
+extern std::unordered_map<str, Color> Colors;
+extern str_dict newProjectDetails;
 
 //reading files (json as dict[str, str])
 str_dict read_json(str path);

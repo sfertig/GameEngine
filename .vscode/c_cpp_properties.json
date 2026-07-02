@@ -6,7 +6,9 @@
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/**",
                 "C:/Users/sfert/Documents/raylib-5.5_win64_mingw-w64/include",
-                "${workspaceFolder}/launcher/**"
+                "${workspaceFolder}/launcher/**",
+                "${workspaceFolder}/engineFeatures/**",
+                "${workspaceFolder}/utils/**",
             ],
             "defines": [
                 "_DEBUG",
