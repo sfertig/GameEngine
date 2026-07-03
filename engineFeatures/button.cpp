@@ -20,6 +20,7 @@ Button::Button(float x, float y, float width, float height, Color bg_color) {
     this->is_hovered = false;
     this->is_pressed = false;
     this->mouse_down = false;
+    this->is_active = true; // Default to active
 }
 
 Button::Button(float x, float y, float width, float height, Color bg_color, Color hover_color, str text, Color text_color, int text_size) {
@@ -36,11 +37,15 @@ Button::Button(float x, float y, float width, float height, Color bg_color, Colo
     this->is_hovered = false;
     this->is_pressed = false;
     this->mouse_down = false;
+    this->is_active = true; // Default to active
 }
 
 void Button::update(Vector2 mouse_pos) {
     is_hovered = false;
     is_pressed = false;
+    if (!is_active) {
+        return;
+    }
 
     //hovering
     if (collideRect(mouse_pos, Rectangle{x, y, width, height})) {
@@ -109,6 +114,8 @@ void TextInputBox::update(Vector2 mouse_pos){
         // 1. Handle Backspace (Use IsKeyPressed or IsKeyDown)
         if (IsKeyPressed(KEY_BACKSPACE) && text.size() > 0) {
             text.pop_back();
+        } else if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_ESCAPE)) {
+            is_active = false;
         }
         
         // 2. Clear key presses by processing Raylib's queue properly

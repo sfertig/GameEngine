@@ -21,6 +21,7 @@ public:
     bool is_hovered;
     bool is_pressed;
     bool mouse_down;
+    bool is_active;
 
     //funcs
     Button() = default;

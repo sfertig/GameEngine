@@ -44,7 +44,11 @@ class NewProjectWin{
 
         bool running;
 
+        Button nameText;
         TextInputBox name_box;
+
+        Button create_button;
+        Button cancel_button;
 
         //funcs
         NewProjectWin() = default;
@@ -53,6 +57,10 @@ class NewProjectWin{
         void run();
         void update();
         void render();
+
+        void createProject();
+
+        str FormatName();
 };
 
 
