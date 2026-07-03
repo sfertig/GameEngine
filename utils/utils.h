@@ -28,6 +28,9 @@ extern std::unordered_map<str, Color> recent_projects_dict;
 struct _launcher_colors {
     Color launcher_bg;
     Color top_bar_bg;
+    Color create_button_norm;
+    Color create_button_hovered;
+    Color create_button_text;
 };
 extern _launcher_colors launcher_colors;
 

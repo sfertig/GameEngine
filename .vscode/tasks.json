@@ -9,6 +9,7 @@
             "main.cpp",
             "launcher/launcher.cpp",
             "engineFeatures/subscreen.cpp",
+            "engineFeatures/button.cpp",
             "utils/utils.cpp",
             
             // Explicit Include Directory Flags

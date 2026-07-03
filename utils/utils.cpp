@@ -93,7 +93,10 @@ str_dict read_json(str path) {
 
 struct _launcher_colors launcher_colors = {
     Color{190, 190, 190, 255},
-    Color{54, 61, 74, 255}
+    Color{54, 61, 74, 255},
+    Color{77, 89, 153, 255},
+    Color{119, 137, 237, 255},
+    Color{255, 255, 255, 255}
 }; 
 
 void save_json(str path, str_dict details) {
