@@ -145,7 +145,10 @@ void NewProjectWin::update() {
 
 void NewProjectWin::createProject(){
     //test for now
-    print_str("Creating project with name: " + FormatName());
+    str name = FormatName();
+    print_str("Creating project with name: " + name);
+    str path = "projects/" + name;
+    
 }
 
 void NewProjectWin::render() {

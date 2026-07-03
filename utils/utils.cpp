@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <fstream>
 #include "json.hpp"
+#include <filesystem>
 
 using json = nlohmann::json;
 
@@ -123,6 +124,10 @@ void save_json(str path, str_dict details) {
     }
 }
 
+bool folder_exists(const std::string& path) {
+    return std::filesystem::is_directory(path);
+}
 
-
-
+bool file_exists(const std::string& path) {
+    return std::filesystem::exists(path);
+}

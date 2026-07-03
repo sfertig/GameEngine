@@ -40,5 +40,7 @@ extern _launcher_colors launcher_colors;
 //reading files (json as dict[str, str])
 str_dict read_json(str path);
 void save_json(str path, str_dict details);
+bool folder_exists(str path);
+bool file_exists(str path);
 
 #endif
