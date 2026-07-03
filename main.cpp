@@ -15,6 +15,8 @@ int main() {
     Launcher launcher = Launcher(ENGINE_VERSION);
     launcher.run();
 
+    print_str("Exit with code -1");
+
     return 0;
 }
 

@@ -19,13 +19,14 @@ public:
 
     bool is_hovered;
     bool is_pressed;
+    bool mouse_down;
 
     //funcs
     Button() = default;
     Button(float x, float y, float width, float height, Color bg_color);
-    Button(float x, float y, float width, float height, Color bg_color, Color hover_color, str text, Color text_color, int text_size=20);
+    Button(float x, float y, float width, float height, Color bg_color, Color hover_color, str text, Color text_color, int text_size);
 
-    void update();
+    void update(Vector2 mouse_pos);
     void render();
     
 };

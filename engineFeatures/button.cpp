@@ -2,6 +2,7 @@
 #include <string>
 #include <iostream>
 #include "button.h"
+#include "subscreen.h"
 
 
 Button::Button(float x, float y, float width, float height, Color bg_color) {
@@ -17,9 +18,10 @@ Button::Button(float x, float y, float width, float height, Color bg_color) {
 
     this->is_hovered = false;
     this->is_pressed = false;
+    this->mouse_down = false;
 }
 
-Button::Button(float x, float y, float width, float height, Color bg_color, Color hover_color, str text, Color text_color, int text_size=20) {
+Button::Button(float x, float y, float width, float height, Color bg_color, Color hover_color, str text, Color text_color, int text_size) {
     this->x = x;
     this->y = y;
     this->width = width;
@@ -32,18 +34,30 @@ Button::Button(float x, float y, float width, float height, Color bg_color, Colo
 
     this->is_hovered = false;
     this->is_pressed = false;
+    this->mouse_down = false;
 }
 
-void Button::update() {
-    // Check if the mouse is hovering over the button
-    if (CheckCollisionPointRec(GetMousePosition(), { x, y, width, height })) {
+void Button::update(Vector2 mouse_pos) {
+    is_hovered = false;
+    is_pressed = false;
+
+    //hovering
+    if (mouse_pos.x >= x && mouse_pos.x <= x + width &&
+        mouse_pos.y >= y && mouse_pos.y <= y + height) {
         is_hovered = true;
-        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-            is_pressed = true;
+
+        //clicking
+        if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
+            mouse_down = true;
+        } else {
+            if (mouse_down) {
+                is_pressed = true; // Button was clicked
+            }
+            mouse_down = false;
         }
     } else {
-        is_hovered = false;
-        is_pressed = false;
+        mouse_down = false; // Reset mouse down state if not hovering
+
     }
 }
 

@@ -24,7 +24,8 @@ Launcher::Launcher(str version) {
     //subscreens
     topBar = SubScreen(0.0, 0.0, width, 25.0, launcher_colors.top_bar_bg);
     create_button = Button(1.0, 1.0, 50.0, 37.0, launcher_colors.create_button_norm, 
-        launcher_colors.create_button_hovered, "+", launcher_colors.create_button_text);
+        launcher_colors.create_button_hovered, "+", 
+        launcher_colors.create_button_text, 20);
     print_dict(read_json("data/launcher_data.json")); //test and debug json reading
 }
 
@@ -43,7 +44,10 @@ void Launcher::update() {
     }
 
     //button updates
-    create_button.update();
+    create_button.update(topBar.get_local_mouse_pos());
+    if (create_button.is_pressed) {
+        print_str("Create button pressed!");
+    }
 
 }
 
