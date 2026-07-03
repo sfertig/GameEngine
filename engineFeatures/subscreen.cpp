@@ -27,12 +27,12 @@ void SubScreen::end_draw() {
 void SubScreen::render_to_window() {
     // Raylib render textures are upside down by default due to OpenGL coordinates.
     // We flip the source rectangle's height negative to draw it right side up!
-    //Rectangle src = { 0, 0, bounds.width, -bounds.height };
+    Rectangle src = { 0, 0, bounds.width, -bounds.height };
     
     // Draw our isolated canvas directly onto the main window screen
-    //DrawTexturePro(canvas.texture, src, bounds, { 0, 0 }, 0.0f, WHITE);
+    DrawTexturePro(canvas.texture, src, bounds, { 0, 0 }, 0.0f, WHITE);
 
-    DrawTexture(canvas.texture, (int)bounds.x, (int)bounds.y, WHITE);
+    //DrawTexture(canvas.texture, (int)bounds.x, (int)bounds.y, WHITE);
 }
 
 Vector2 SubScreen::get_local_mouse_pos() {

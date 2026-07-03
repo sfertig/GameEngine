@@ -4,12 +4,10 @@
 #include <raylib.h>
 
 class SubScreen {
-private:
+public:
     RenderTexture2D canvas; // The off-screen drawing surface
     Rectangle bounds;       // X, Y, Width, Height on the main window
     Color bg_color;
-
-public:
     // Constructor: Takes position, size, and background color
     SubScreen() = default;
     SubScreen(float x, float y, float width, float height, Color background);

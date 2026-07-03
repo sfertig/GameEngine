@@ -24,12 +24,32 @@ class Launcher {
         Color bg_color;
 
         str EDITOR_VERSION;
-
+        str title;
         SubScreen topBar;
         Button create_button;
 
         //funcs
         Launcher(str version);
+        void reinit();
+        void run();
+        void update();
+        void render();
+};
+
+class NewProjectWin{
+    public:
+        //vars
+        int width; int height;
+        Color bg_color;
+
+        bool running;
+
+        TextInputBox name_box;
+
+        //funcs
+        NewProjectWin() = default;
+        NewProjectWin(int width, int height);
+
         void run();
         void update();
         void render();

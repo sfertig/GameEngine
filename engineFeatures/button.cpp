@@ -3,6 +3,7 @@
 #include <iostream>
 #include "button.h"
 #include "subscreen.h"
+#include "utils.h"
 
 
 Button::Button(float x, float y, float width, float height, Color bg_color) {
@@ -42,8 +43,7 @@ void Button::update(Vector2 mouse_pos) {
     is_pressed = false;
 
     //hovering
-    if (mouse_pos.x >= x && mouse_pos.x <= x + width &&
-        mouse_pos.y >= y && mouse_pos.y <= y + height) {
+    if (collideRect(mouse_pos, Rectangle{x, y, width, height})) {
         is_hovered = true;
 
         //clicking
@@ -74,5 +74,67 @@ void Button::render() {
         float text_y = y + (height - text_size.y) / 2;
         DrawText(text.c_str(), static_cast<int>(text_x), static_cast<int>(text_y), font_size, text_color);
     }
+}
+
+TextInputBox::TextInputBox(float x, float y, float width, float height, Color bg, Color active_bg, Color text_color, int text_size) {
+    this->x = x;
+    this->y = y;
+    this->width = width;
+    this->height = height;
+    this->bg = bg;
+    this->active_bg = active_bg;
+    this->text_color = text_color;
+    this->text_size = text_size;
+
+    this->text = "";
+
+    this->is_active = false;
+
+    // Initialize the SubScreen box
+    box = SubScreen(x, y, width, height, bg);
+}
+void TextInputBox::update(Vector2 mouse_pos){
+    // Keep your excellent collision logic!
+    Rectangle click_area = {box.bounds.x, box.bounds.y, box.bounds.width, box.bounds.height};
+    
+    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+        if (collideRect(mouse_pos, click_area)) {
+            is_active = true;
+        } else {
+            is_active = false;
+        }
+    }
+
+    if (is_active) {
+        // 1. Handle Backspace (Use IsKeyPressed or IsKeyDown)
+        if (IsKeyPressed(KEY_BACKSPACE) && text.size() > 0) {
+            text.pop_back();
+        }
+        
+        // 2. Clear key presses by processing Raylib's queue properly
+        int key = GetCharPressed();
+        while (key > 0) {
+            // Only allow normal text range characters (printable ASCII)
+            if ((key >= 32) && (key <= 125)) {
+                text += (char)key;
+            }
+            key = GetCharPressed(); // Grab next character in queue
+        }
+    }
+}
+
+void TextInputBox::render(){
+    // Set your active color swap cleanly
+    box.bg_color = is_active ? active_bg : bg;
+
+    box.begin_draw();
+        // FIXED: Draw text at local relative coordinates (0, 0) inside the box!
+        // We add a tiny offset padding (like 5 pixels) so text doesn't slam into the edge.
+        DrawText(text.c_str(), 5, 5, text_size, text_color);
+    box.end_draw();
+}
+
+void TextInputBox::renderToWin(){
+    box.render_to_window();
 }
 

@@ -38,6 +38,11 @@ void nl() {
     std::cout << std::endl;
 }
 
+bool collideRect(Vector2 pos, Rectangle rect){
+    return(pos.x >= rect.x && pos.x <= rect.x + rect.width &&
+        pos.y >= rect.y && pos.y <= rect.y + rect.height);
+}
+
 std::unordered_map<str, Color> Colors = {
     {"black", BLACK},
     {"blue", BLUE},
@@ -96,7 +101,8 @@ struct _launcher_colors launcher_colors = {
     Color{54, 61, 74, 255},
     Color{77, 89, 153, 255},
     Color{119, 137, 237, 255},
-    Color{255, 255, 255, 255}
+    Color{255, 255, 255, 255},
+
 }; 
 
 void save_json(str path, str_dict details) {

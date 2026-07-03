@@ -17,6 +17,8 @@ void print_int(int i, bool nl = true);
 void print_dict(str_dict d, bool nl = true);
 void nl();
 
+bool collideRect(Vector2 pos, Rectangle rect);
+
 //dicts
 
 extern std::unordered_map<str, Color> Colors;
@@ -31,6 +33,7 @@ struct _launcher_colors {
     Color create_button_norm;
     Color create_button_hovered;
     Color create_button_text;
+
 };
 extern _launcher_colors launcher_colors;
 
