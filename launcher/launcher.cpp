@@ -57,7 +57,7 @@ void Launcher::update() {
     //button updates
     create_button.update(topBar.get_local_mouse_pos());
     if (create_button.is_pressed || (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyDown(KEY_N))) {
-        NewProjectWin new_project_win = NewProjectWin(800, 600);
+        NewProjectWin new_project_win = NewProjectWin(800, 600, EDITOR_VERSION);
         new_project_win.run();
         //reinit window
         reinit();
@@ -77,10 +77,11 @@ void Launcher::render() {
     EndDrawing();
 }
 
-NewProjectWin::NewProjectWin(int width, int height) {
+NewProjectWin::NewProjectWin(int width, int height, str version) {
     this->width = width;
     this->height = height;
     bg_color =  Color{54, 61, 74, 255};
+    this->version = version;
     running = true;
 
     CloseWindow(); // Close the launcher window when opening the new project window
@@ -112,6 +113,66 @@ NewProjectWin::NewProjectWin(int width, int height) {
         Color{255, 255, 255, 255}, 
         20);
 
+    //settings
+    settingsTag = Button(0.0, 100.0, width, 30.0, 
+        Color{77, 89, 153, 255}, 
+        Color{119, 137, 237, 255}, 
+        "Settings (Coming Soon)", 
+        Color{255, 255, 255, 255}, 
+        20);
+    //title
+    b_title = Button(5.0, 140.0, 215.0, 20.0, 
+        Color{77, 89, 153, 255}, 
+        Color{119, 137, 237, 255}, 
+        "Game Title:", 
+        Color{255, 255, 255, 255}, 
+        20); b_title.is_active = false;
+
+    s_title = TextInputBox(5.0, 160.0, 215.0, 30.0, 
+        Color{200, 200, 200, 255}, 
+        Color{150, 150, 150, 255}, 
+        Color{0, 0, 0, 255}, 20); s_title.text = newProjectDetails["cnfg_title"];
+    //fps
+    b_fps = Button(230.0, 140.0, 215.0, 20.0, 
+        Color{77, 89, 153, 255}, 
+        Color{119, 137, 237, 255},
+        "FPS:",
+        Color{255, 255, 255, 255}, 20.0),
+    s_fps = TextInputBox(230.0, 160.0, 215.0, 30.0, 
+        Color{200, 200, 200, 255}, 
+        Color{150, 150, 150, 255}, 
+        Color{0, 0, 0, 255}, 20); s_fps.text = newProjectDetails["cnfg_fps"];
+    //bg color
+    b_bg_color = Button(455.0, 140.0, 215.0, 20.0, 
+        Color{77, 89, 153, 255}, 
+        Color{119, 137, 237, 255},
+        "Background Color:",
+        Color{255, 255, 255, 255}, 20.0),
+    s_bg_color = TextInputBox(455.0, 160.0, 215.0, 30.0, 
+        Color{200, 200, 200, 255}, 
+        Color{150, 150, 150, 255}, 
+        Color{0, 0, 0, 255}, 20); s_bg_color.text = newProjectDetails["cnfg_bg_color"];
+    //width
+    b_width = Button(5.0, 200.0, 215.0, 20.0, 
+        Color{77, 89, 153, 255}, 
+        Color{119, 137, 237, 255},
+        "Width:",
+        Color{255, 255, 255, 255}, 20.0),
+    s_width = TextInputBox(5.0, 220.0, 215.0, 30.0, 
+        Color{200, 200, 200, 255}, 
+        Color{150, 150, 150, 255}, 
+        Color{0, 0, 0, 255}, 20); s_width.text = newProjectDetails["cnfg_width"];
+    //height
+    b_height = Button(230.0, 200.0, 215.0, 20.0, 
+        Color{77, 89, 153, 255}, 
+        Color{119, 137, 237, 255},
+        "Height:",
+        Color{255, 255, 255, 255}, 20.0),
+    s_height = TextInputBox(230.0, 220.0, 215.0, 30.0, 
+        Color{200, 200, 200, 255}, 
+        Color{150, 150, 150, 255}, 
+        Color{0, 0, 0, 255}, 20); s_height.text = newProjectDetails["cnfg_height"];
+
     
 }
 
@@ -130,10 +191,18 @@ void NewProjectWin::update() {
     if (IsKeyPressed(KEY_ESCAPE) && !(name_box.is_active)) {
         running = false;
     }
+    else if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_ENTER)) {
+        createProject();
+    }
     name_box.update(GetMousePosition());
     create_button.update(GetMousePosition());
     cancel_button.update(GetMousePosition());
 
+    s_title.update(GetMousePosition());
+    s_fps.update(GetMousePosition());
+    s_bg_color.update(GetMousePosition());
+    s_width.update(GetMousePosition());
+    s_height.update(GetMousePosition());
     if (cancel_button.is_pressed) {
         running = false;
     }
@@ -148,11 +217,42 @@ void NewProjectWin::createProject(){
     str name = FormatName();
     print_str("Creating project with name: " + name);
     str path = "projects/" + name;
-    
+    //if project already exists, do not create
+    if (folder_exists(path)) {
+        print_str("Error: Project already exists at path: " + path);
+        return;
+    }
+    //else create folder and save project details
+    create_folder(path);
+    create_folder(path + "/assets");
+    create_folder(path + "/assets/images");
+    create_folder(path + "/assets/sounds");
+    create_folder(path + "/assets/models");
+    create_folder(path + "/data");
+    create_folder(path + "/data/scenes");
+    create_folder(path + "/data/scripts");
+    //create project details file
+    str_dict details(newProjectDetails);
+    //config json file data
+    details["name"] = name;
+    details["path"] = path;
+    details["version"] = version;
+    details["cnfg_width"] = s_width.text;
+    details["cnfg_height"] = s_height.text;
+    details["cnfg_fps"] = s_fps.text;
+    details["cnfg_title"] = s_title.text;
+    details["cnfg_bg_color"] = s_bg_color.text;
+    save_json(path + "/details.json", details);
+    running = false;
 }
 
 void NewProjectWin::render() {
     name_box.render();
+    s_title.render();
+    s_fps.render();
+    s_bg_color.render();
+    s_width.render();
+    s_height.render();
 
     BeginDrawing();
         ClearBackground(bg_color);
@@ -162,6 +262,23 @@ void NewProjectWin::render() {
 
         create_button.render();
         cancel_button.render();
+
+        settingsTag.render();
+
+        b_title.render();
+        s_title.renderToWin();
+
+        b_fps.render();
+        s_fps.renderToWin();
+
+        b_bg_color.render();
+        s_bg_color.renderToWin();
+
+        b_width.render();
+        s_width.renderToWin();
+
+        b_height.render();
+        s_height.renderToWin();
 
     EndDrawing();
 }
@@ -176,6 +293,10 @@ str NewProjectWin::FormatName() {
         else if (isspace(c) || c == ' ' || c == '-') {
             text += '_'; // Replace spaces with underscores
         }
+    }
+    //only lowercase letters
+    for (char& c : text) {
+        c = tolower(c);
     }
     return text;
 }

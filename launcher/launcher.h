@@ -44,15 +44,25 @@ class NewProjectWin{
 
         bool running;
 
+        str version;
+
         Button nameText;
         TextInputBox name_box;
 
         Button create_button;
         Button cancel_button;
 
+        //settings
+        Button settingsTag;
+        TextInputBox s_fps; Button b_fps;
+        TextInputBox s_width; Button b_width;
+        TextInputBox s_height; Button b_height;
+        TextInputBox s_bg_color; Button b_bg_color;
+        TextInputBox s_title; Button b_title;
+
         //funcs
         NewProjectWin() = default;
-        NewProjectWin(int width, int height);
+        NewProjectWin(int width, int height, str version);
 
         void run();
         void update();

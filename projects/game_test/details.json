@@ -1,0 +1,11 @@
+{
+    "cnfg_bg_color": "black",
+    "cnfg_fps": "120",
+    "cnfg_height": "800",
+    "cnfg_start_scene": "",
+    "cnfg_title": "TBD",
+    "cnfg_width": "1000",
+    "name": "game_test",
+    "path": "projects/game_test",
+    "version": "1.0.0"
+}

@@ -131,3 +131,8 @@ bool folder_exists(const std::string& path) {
 bool file_exists(const std::string& path) {
     return std::filesystem::exists(path);
 }
+
+void create_folder(const std::string& path) {
+    std::filesystem::create_directory(path);
+}
+
