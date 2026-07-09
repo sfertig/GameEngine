@@ -44,4 +44,5 @@ bool folder_exists(const std::string& path);
 bool file_exists(const std::string& path);
 void create_folder(const std::string& path);
 
+
 #endif

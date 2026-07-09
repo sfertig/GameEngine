@@ -97,6 +97,8 @@ str_dict read_json(str path) {
     return details;
 };
 
+
+
 struct _launcher_colors launcher_colors = {
     Color{190, 190, 190, 255},
     Color{54, 61, 74, 255},

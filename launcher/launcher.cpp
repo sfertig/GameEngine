@@ -7,25 +7,32 @@
 #include "utils.h"
 #include "button.h"
 // This global constant can live here perfectly fine
-str LAUNCHER_VERSION = "1.0.0";
+str LAUNCHER_VERSION = "1.1.0";
+
+str_dict recents_list = read_json("data/launcher_data.json");
+const int scroll_speed = 20;
+const int arrow_factor = 10;
+const int arrow_scroll_speed = scroll_speed/arrow_factor;
 
 // 1. The Constructor implementation
 Launcher::Launcher(str version) {
+    recents_list = read_json("data/launcher_data.json");
     EDITOR_VERSION = version;
     running = true;
     width = 1152.0;
     height = 648.0;
-    bg_color = launcher_colors.launcher_bg;
+    bg_color = Color{209, 235, 14, 255};
     
-    str title = "DevPace Launcher v" + LAUNCHER_VERSION;
+    title = "DevPace Launcher v" + LAUNCHER_VERSION;
     reinit();
-    print_dict(read_json("data/launcher_data.json")); //test and debug json reading
+    print_dict(recents_list); //test and debug json reading
 }
 
 void Launcher::reinit() {
+    save_json("data/launcher_data.json", recents_list);
     InitWindow(width, height, title.c_str());
     SetExitKey(KEY_NULL);
-    //SetWindowTitle(title.c_str());
+    SetWindowTitle(title.c_str());
     //subscreens
     topBar = SubScreen(0.0,
     0.0, width,
@@ -33,11 +40,41 @@ void Launcher::reinit() {
     create_button = Button(1.0,
     1.0,
     50.0,
-    37.0, launcher_colors.create_button_norm, 
+    24.0, launcher_colors.create_button_norm, 
         launcher_colors.create_button_hovered,
     "+", 
         launcher_colors.create_button_text,
     20);
+    refresh_button = Button(55.0,
+    1.0,
+    50.0,
+    24.0, launcher_colors.create_button_norm, 
+        launcher_colors.create_button_hovered,
+    "R", 
+        launcher_colors.create_button_text,
+    20);
+    projectList = SubScreen(0.0, 25.0, width, height-25.0, Color{33, 38, 46, 255});
+    gen_projects();
+}
+
+void Launcher::gen_projects() {
+    int _x = 5;
+    int _y = 10;
+    int _w = width - _x*2;
+    int _h = 100;
+    projects.clear();
+    for (auto &entry : recents_list) {
+        //check if project path is valid
+        if (!folder_exists(entry.second)) {
+            //remove from recents
+            recents_list.erase(entry.first);
+        } else {
+            projects.push_back(
+                ProjectDisplay(_x, _y, _w, _h, entry.second, projectList)
+            );
+            _y += _h+10;
+        }
+    }
 }
 // 2. The run loop implementation
 void Launcher::run() {
@@ -45,6 +82,7 @@ void Launcher::run() {
         update();
         render();
     }
+    save_json("data/launcher_data.json", recents_list);
 }
 // 3. The update loop implementation
 void Launcher::update() {
@@ -62,19 +100,70 @@ void Launcher::update() {
         //reinit window
         reinit();
     }
+
+    refresh_button.update(topBar.get_local_mouse_pos());
+    if (refresh_button.is_pressed || (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyDown(KEY_R))) {
+        print_str("Refreshing project list");
+        gen_projects();
+    }
+    for (ProjectDisplay &project : projects) {
+        project.update();
+    }
+
+    //scrolling project list
+    handle_projectDisplay_scroll();
+
 }
 // 4. The render step implementation
 void Launcher::render() {
     topBar.begin_draw();
         create_button.render();
+        refresh_button.render();
     topBar.end_draw();
+
+    for (ProjectDisplay &project : projects) {
+        project.render();
+    }
+    projectList.begin_draw();
+        for (ProjectDisplay &project : projects) {
+            project.render_to_canvas(); // Draws directly onto the list view!
+        }
+    projectList.end_draw();
 
     BeginDrawing();
         ClearBackground(bg_color); 
 
         topBar.render_to_window(); 
+        projectList.render_to_window();
+
     
     EndDrawing();
+}
+
+void Launcher::handle_projectDisplay_scroll(){
+    if (IsKeyDown(KEY_UP) && can_scroll(-arrow_scroll_speed)) {
+        for (ProjectDisplay &project : projects) {
+        project.move_y(-arrow_scroll_speed);
+    }
+    }
+    else if (IsKeyDown(KEY_DOWN) && can_scroll(arrow_scroll_speed)) {
+        for (ProjectDisplay &project : projects) {
+        project.move_y(arrow_scroll_speed);
+    }
+    }
+    int scroll = GetMouseWheelMove();
+    if (scroll != 0.0 && can_scroll(-(scroll*scroll_speed))) {
+        for (ProjectDisplay &project : projects) {
+        project.move_y(int(-(scroll*scroll_speed)));
+    }
+    }
+}
+
+bool Launcher::can_scroll(int i){
+    for (ProjectDisplay &project : projects) {
+    if (project.y+i+project.height > height || project.y + i < 0) {return false;}
+    }
+    return true;
 }
 
 NewProjectWin::NewProjectWin(int width, int height, str version) {
@@ -115,9 +204,9 @@ NewProjectWin::NewProjectWin(int width, int height, str version) {
 
     //settings
     settingsTag = Button(0.0, 100.0, width, 30.0, 
-        Color{77, 89, 153, 255}, 
+        Color{39, 45, 79, 255}, 
         Color{119, 137, 237, 255}, 
-        "Settings (Coming Soon)", 
+        "Advanced Settings", 
         Color{255, 255, 255, 255}, 
         20);
     //title
@@ -244,6 +333,8 @@ void NewProjectWin::createProject(){
     details["cnfg_bg_color"] = s_bg_color.text;
     save_json(path + "/details.json", details);
     running = false;
+    //if all goes well add to project list
+    recents_list[name] = path;
 }
 
 void NewProjectWin::render() {
@@ -299,4 +390,39 @@ str NewProjectWin::FormatName() {
         c = tolower(c);
     }
     return text;
+}
+
+ProjectDisplay::ProjectDisplay(int x, int y, int width, int height, str path, SubScreen& canvas) {
+    this->x = x;
+    this->y = y;
+    this->width = width;
+    this->height = height;
+    this->path = path;
+    this->bg_color = Color{46, 46, 59, 255};
+    this->screen = SubScreen(x, y, width, height, bg_color);
+    this->canvas = &canvas;
+}
+
+void ProjectDisplay::update(){
+
+}
+
+void ProjectDisplay::render(){
+    screen.begin_draw();
+        DrawText(path.c_str(), 15, 15, 18, WHITE);
+    screen.end_draw();
+}
+
+void ProjectDisplay::render_to_canvas(){
+    
+    Rectangle src = { 0, 0, (float)width, -(float)height };
+    Rectangle dest = { (float)x, (float)y, (float)width, (float)height };
+    
+    // Draw the item card's texture asset straight onto the parent texture!
+    DrawTexturePro(screen.canvas.texture, src, dest, { 0, 0 }, 0.0f, WHITE);
+}
+
+void ProjectDisplay::move_y(int i){
+    y += i;
+    screen.bounds.y += i;
 }

@@ -12,7 +12,28 @@
 #include "button.h"
 
 typedef std::string str;
+typedef std::unordered_map<str, str> str_dict; 
 
+
+extern str_dict recents_list;
+
+class ProjectDisplay{
+    public:
+        //vars
+        int width, height, x, y;
+        Color bg_color;
+        SubScreen screen;
+        str path;
+        SubScreen* canvas;
+
+        //funcs
+        ProjectDisplay(int x, int y, int width, int height, str path, SubScreen& canvas);
+        void update();
+        void render();
+        void render_to_canvas();
+        void move_y(int i);
+
+};
 
 
 class Launcher {
@@ -26,14 +47,21 @@ class Launcher {
         str EDITOR_VERSION;
         str title;
         SubScreen topBar;
+        SubScreen projectList;
         Button create_button;
+        Button refresh_button;
+
+        std::vector<ProjectDisplay> projects;
 
         //funcs
         Launcher(str version);
         void reinit();
+        void gen_projects();
         void run();
         void update();
         void render();
+        void handle_projectDisplay_scroll();
+        bool can_scroll(int i);
 };
 
 class NewProjectWin{
