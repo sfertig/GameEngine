@@ -53,6 +53,14 @@ void Launcher::reinit() {
     "R", 
         launcher_colors.create_button_text,
     20);
+    regen_btn = Button(110.0,
+    1.0,
+    50.0,
+    24.0, launcher_colors.create_button_norm, 
+        launcher_colors.create_button_hovered,
+    "G", 
+        launcher_colors.create_button_text,
+    20);
     projectList = SubScreen(0.0, 25.0, width, height-25.0, Color{33, 38, 46, 255});
     gen_projects();
 }
@@ -70,7 +78,7 @@ void Launcher::gen_projects() {
             recents_list.erase(entry.first);
         } else {
             projects.push_back(
-                ProjectDisplay(_x, _y, _w, _h, entry.second, projectList)
+                ProjectDisplay(_x, _y, _w, _h, entry.second, entry.first, projectList)
             );
             _y += _h+10;
         }
@@ -106,8 +114,19 @@ void Launcher::update() {
         print_str("Refreshing project list");
         gen_projects();
     }
+
+    regen_btn.update(topBar.get_local_mouse_pos());
+    if (regen_btn.is_pressed || (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyDown(KEY_G))) {
+        print_str("Regenerating project list");
+        regen_projects_folder();
+    }
     for (ProjectDisplay &project : projects) {
         project.update();
+        if (project.remove_btn_active){
+            print_str("Removing project: " + project.name);
+            recents_list.erase(project.name);
+            gen_projects();
+        }
     }
 
     //scrolling project list
@@ -119,6 +138,7 @@ void Launcher::render() {
     topBar.begin_draw();
         create_button.render();
         refresh_button.render();
+        regen_btn.render();
     topBar.end_draw();
 
     for (ProjectDisplay &project : projects) {
@@ -164,6 +184,16 @@ bool Launcher::can_scroll(int i){
     if (project.y+i+project.height > height || project.y + i < 0) {return false;}
     }
     return true;
+}
+
+void Launcher::regen_projects_folder(){
+    //scan projects folder and regen project list
+    std::vector<str> folders = list_folders("projects");
+    recents_list.clear();
+    for (str folder : folders) {
+        recents_list[folder] = folder;
+    }
+    gen_projects();
 }
 
 NewProjectWin::NewProjectWin(int width, int height, str version) {
@@ -381,7 +411,7 @@ str NewProjectWin::FormatName() {
         if (isalnum(c) || c == '_') {
             text += c;
         }
-        else if (isspace(c) || c == ' ' || c == '-') {
+        else if (isspace(c)){// && !text[text.length() - 1] == '_') {
             text += '_'; // Replace spaces with underscores
         }
     }
@@ -392,24 +422,36 @@ str NewProjectWin::FormatName() {
     return text;
 }
 
-ProjectDisplay::ProjectDisplay(int x, int y, int width, int height, str path, SubScreen& canvas) {
+ProjectDisplay::ProjectDisplay(int x, int y, int width, int height, str path, str name, SubScreen& canvas) {
     this->x = x;
     this->y = y;
     this->width = width;
     this->height = height;
     this->path = path;
+    this-> name = name;
     this->bg_color = Color{46, 46, 59, 255};
     this->screen = SubScreen(x, y, width, height, bg_color);
     this->canvas = &canvas;
+
+    remove_btn = Button(5.0, 75.0, 125.0, 20.0, Color{25, 25, 36, 255}, 
+        Color{41, 41, 64, 255}, "Remove", WHITE, 20);
+    run_btn = Button(140.0, 75.0, 125.0, 20.0, Color{25, 25, 36, 255},
+        Color{41, 41, 64, 255}, "Run", WHITE, 20);
 }
 
 void ProjectDisplay::update(){
-
+    Vector2 mpos = screen.get_local_mouse_pos();
+    mpos.y -= 22.0;
+    remove_btn.update(mpos);
+    run_btn.update(mpos);
+    remove_btn_active = remove_btn.is_pressed;
 }
 
 void ProjectDisplay::render(){
     screen.begin_draw();
-        DrawText(path.c_str(), 15, 15, 18, WHITE);
+        DrawText(name.c_str(), 15, 15, 18, WHITE);
+        remove_btn.render();
+        run_btn.render();
     screen.end_draw();
 }
 

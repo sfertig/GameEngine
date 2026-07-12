@@ -137,4 +137,12 @@ bool file_exists(const std::string& path) {
 void create_folder(const std::string& path) {
     std::filesystem::create_directory(path);
 }
-
+std::vector<str> list_folders(const std::string& path){
+    std::vector<str> folders;
+    for (const auto& entry : std::filesystem::directory_iterator(path)) {
+        if (entry.is_directory()) {
+            folders.push_back(entry.path().string());
+        }
+    }
+    return folders;
+}

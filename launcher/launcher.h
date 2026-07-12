@@ -24,10 +24,16 @@ class ProjectDisplay{
         Color bg_color;
         SubScreen screen;
         str path;
+        str name;
         SubScreen* canvas;
 
+        Button remove_btn;
+        bool remove_btn_active;
+
+        Button run_btn;
+
         //funcs
-        ProjectDisplay(int x, int y, int width, int height, str path, SubScreen& canvas);
+        ProjectDisplay(int x, int y, int width, int height, str path, str name, SubScreen& canvas);
         void update();
         void render();
         void render_to_canvas();
@@ -50,6 +56,7 @@ class Launcher {
         SubScreen projectList;
         Button create_button;
         Button refresh_button;
+        Button regen_btn;
 
         std::vector<ProjectDisplay> projects;
 
@@ -62,6 +69,7 @@ class Launcher {
         void render();
         void handle_projectDisplay_scroll();
         bool can_scroll(int i);
+        void regen_projects_folder();
 };
 
 class NewProjectWin{

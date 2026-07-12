@@ -43,6 +43,7 @@ void save_json(str path, str_dict details);
 bool folder_exists(const std::string& path);
 bool file_exists(const std::string& path);
 void create_folder(const std::string& path);
+std::vector<str> list_folders(const std::string& path);
 
 
 #endif
